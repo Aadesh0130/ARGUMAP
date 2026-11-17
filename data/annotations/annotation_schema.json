@@ -1,0 +1,230 @@
+{
+  "schema_version": "1.0.0",
+  "title": "ARGUMAP Annotation Schema Specification",
+  "description": "Defines the canonical data representation for ARGUMAP human annotations and ground-truth argument mining files.",
+  "frozen_taxonomy": {
+    "component_labels": [
+      "CLAIM",
+      "PREMISE",
+      "EVIDENCE",
+      "COUNTERARGUMENT",
+      "REBUTTAL",
+      "OTHER"
+    ],
+    "relation_labels": [
+      "SUPPORTS",
+      "ATTACKS",
+      "RESPONDS_TO",
+      "NO_RELATION"
+    ]
+  },
+  "debate_metadata_fields": {
+    "debate_id": {
+      "type": "string",
+      "description": "Unique identifier for the debate session or document.",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable title or motion of the debate.",
+      "required": true
+    },
+    "source_corpus": {
+      "type": "string",
+      "description": "Originating corpus identifier matching data/dataset_manifest.json (e.g., qt30, us2016, custom).",
+      "required": true
+    },
+    "source_license": {
+      "type": "string",
+      "description": "License applicable to the source material.",
+      "required": true
+    },
+    "guideline_version": {
+      "type": "string",
+      "description": "Version of ANNOTATION_GUIDELINES.md used during annotation (e.g., 1.0.0).",
+      "required": true
+    },
+    "status": {
+      "type": "string",
+      "description": "Lifecycle status of the annotation document (e.g. UNANNOTATED_TEMPLATE, UNANNOTATED_PILOT_PACKAGE, ANNOTATED_GOLD).",
+      "required": false
+    },
+    "candidate_relation_policy": {
+      "type": "string",
+      "description": "Identifier or descriptor of relation candidate generation policy (e.g. provisional_directional_k3).",
+      "required": false
+    },
+    "pilot_selection": {
+      "type": "object",
+      "description": "Metadata regarding bounded pilot selection (e.g. selection method, source turns, unit ranges).",
+      "required": false
+    },
+    "instructions": {
+      "type": "object",
+      "description": "Annotator instructions and ambiguity resolution protocol.",
+      "required": false
+    }
+  },
+  "argument_unit_fields": {
+    "debate_id": {
+      "type": "string",
+      "description": "ID of parent debate.",
+      "required": true
+    },
+    "source_corpus": {
+      "type": "string",
+      "description": "Originating corpus ID.",
+      "required": true
+    },
+    "source_license": {
+      "type": "string",
+      "description": "License of original text.",
+      "required": true
+    },
+    "turn_id": {
+      "type": "string",
+      "description": "Identifier of the speech turn containing this unit.",
+      "required": true
+    },
+    "turn_index": {
+      "type": "integer",
+      "description": "Zero-based sequential index of the turn within the debate transcript.",
+      "required": true
+    },
+    "speaker_id": {
+      "type": "string",
+      "description": "Identifier of the speaker who uttered this proposition.",
+      "required": true
+    },
+    "speaker_role": {
+      "type": "string",
+      "description": "Role of the speaker (e.g., 'Debater', 'Moderator', 'Audience', 'Panelist').",
+      "required": false
+    },
+    "speaker_side": {
+      "type": "string",
+      "description": "Stance or faction in the debate (e.g., 'Affirmative', 'Negative', 'Neutral').",
+      "required": false
+    },
+    "unit_id": {
+      "type": "string",
+      "description": "Unique identifier for this argument unit (e.g., 'u_001').",
+      "required": true
+    },
+    "unit_text": {
+      "type": "string",
+      "description": "Verbatim text of the segmented proposition.",
+      "required": true
+    },
+    "char_start": {
+      "type": "integer",
+      "description": "Starting character index (0-indexed, inclusive) in the turn text.",
+      "required": true
+    },
+    "char_end": {
+      "type": "integer",
+      "description": "Ending character index (exclusive) in the turn text.",
+      "required": true
+    },
+    "component_label": {
+      "type": "string",
+      "enum": [
+        "CLAIM",
+        "PREMISE",
+        "EVIDENCE",
+        "COUNTERARGUMENT",
+        "REBUTTAL",
+        "OTHER"
+      ],
+      "description": "Frozen ARGUMAP argument component category.",
+      "required": true
+    },
+    "annotator_id": {
+      "type": "string",
+      "description": "Identifier of the human annotator or adjudication panel.",
+      "required": true
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Annotator confidence score between 0.0 and 1.0.",
+      "required": true
+    },
+    "note": {
+      "type": "string",
+      "description": "Optional annotator remarks, edge-case rationale, or tie-break notes.",
+      "required": false
+    },
+    "guideline_version": {
+      "type": "string",
+      "description": "Annotation guideline version.",
+      "required": true
+    }
+  },
+  "relation_fields": {
+    "source_unit_id": {
+      "type": "string",
+      "description": "Unit ID of the source proposition (tail of directed relation edge).",
+      "required": true
+    },
+    "target_unit_id": {
+      "type": "string",
+      "description": "Unit ID of the target proposition (head of directed relation edge).",
+      "required": true
+    },
+    "relation_label": {
+      "type": "string",
+      "enum": [
+        "SUPPORTS",
+        "ATTACKS",
+        "RESPONDS_TO",
+        "NO_RELATION"
+      ],
+      "description": "Frozen ARGUMAP relation category.",
+      "required": true
+    },
+    "same_speaker": {
+      "type": "boolean",
+      "description": "True if source and target units share the same speaker.",
+      "required": true
+    },
+    "cross_turn": {
+      "type": "boolean",
+      "description": "True if source and target units occur in different speech turns.",
+      "required": true
+    },
+    "turn_distance": {
+      "type": "integer",
+      "description": "Absolute turn distance between source turn index and target turn index (|turn_source - turn_target|).",
+      "required": true
+    },
+    "is_override": {
+      "type": "boolean",
+      "description": "True if relation is an explicit long-range override outside the standard candidate window (e.g. k > 3).",
+      "required": false
+    },
+    "annotator_id": {
+      "type": "string",
+      "description": "Identifier of the human annotator or adjudicator.",
+      "required": true
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Annotator confidence score between 0.0 and 1.0.",
+      "required": true
+    },
+    "note": {
+      "type": "string",
+      "description": "Optional annotator remarks on relation nuances.",
+      "required": false
+    },
+    "guideline_version": {
+      "type": "string",
+      "description": "Annotation guideline version.",
+      "required": true
+    }
+  }
+}

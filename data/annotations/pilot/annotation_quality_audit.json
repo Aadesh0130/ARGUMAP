@@ -1,0 +1,762 @@
+{
+  "audit_timestamp": "2026-10-22T06:52:09.065431+00:00",
+  "frozen_component_labels": [
+    "CLAIM",
+    "PREMISE",
+    "EVIDENCE",
+    "COUNTERARGUMENT",
+    "REBUTTAL",
+    "OTHER"
+  ],
+  "frozen_relation_labels": [
+    "SUPPORTS",
+    "ATTACKS",
+    "RESPONDS_TO",
+    "NO_RELATION"
+  ],
+  "component_kappa_threshold": 0.7,
+  "relation_kappa_threshold": 0.65,
+  "debates": {
+    "debate_001": {
+      "files": {
+        "annotator_A": "C:\\Users\\hii\\Downloads\\ARGUMAP\\data\\annotations\\pilot\\debate_001_annotator_A.json",
+        "annotator_B": "C:\\Users\\hii\\Downloads\\ARGUMAP\\data\\annotations\\pilot\\debate_001_annotator_B.json"
+      },
+      "file_validation": {
+        "annotator_A": {
+          "valid": true,
+          "errors": [],
+          "warnings": [],
+          "unit_count": 22,
+          "relation_count": 12,
+          "unit_ids": [
+            "u_001",
+            "u_002",
+            "u_003",
+            "u_004",
+            "u_005",
+            "u_006",
+            "u_007",
+            "u_008",
+            "u_009",
+            "u_010",
+            "u_011",
+            "u_012",
+            "u_013",
+            "u_014",
+            "u_015",
+            "u_016",
+            "u_017",
+            "u_018",
+            "u_019",
+            "u_020",
+            "u_021",
+            "u_022"
+          ]
+        },
+        "annotator_B": {
+          "valid": true,
+          "errors": [],
+          "warnings": [],
+          "unit_count": 22,
+          "relation_count": 11,
+          "unit_ids": [
+            "u_001",
+            "u_002",
+            "u_003",
+            "u_004",
+            "u_005",
+            "u_006",
+            "u_007",
+            "u_008",
+            "u_009",
+            "u_010",
+            "u_011",
+            "u_012",
+            "u_013",
+            "u_014",
+            "u_015",
+            "u_016",
+            "u_017",
+            "u_018",
+            "u_019",
+            "u_020",
+            "u_021",
+            "u_022"
+          ]
+        }
+      },
+      "cross_annotator_alignment": {
+        "debate_id": "debate_001",
+        "shared_unit_ids": 22,
+        "only_annotator_A_units": [],
+        "only_annotator_B_units": [],
+        "annotator_A_relation_count": 12,
+        "annotator_B_relation_count": 11,
+        "shared_relation_pairs": 11,
+        "only_annotator_A_pairs": [
+          "u_011->u_005"
+        ],
+        "only_annotator_B_pairs": [],
+        "annotator_A_NO_RELATION_count": 0,
+        "annotator_B_NO_RELATION_count": 0,
+        "possible_directed_pairs_from_shared_units": 462,
+        "annotated_pair_coverage_pct": 2.6
+      },
+      "component_agreement": {
+        "status": "COMPLETED",
+        "total_units": 22,
+        "observed_agreement": 0.7727,
+        "expected_agreement": 0.2335,
+        "cohens_kappa": 0.7035,
+        "matrix": [
+          [
+            2,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            3,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0,
+            8
+          ]
+        ],
+        "classes": [
+          "CLAIM",
+          "PREMISE",
+          "EVIDENCE",
+          "COUNTERARGUMENT",
+          "REBUTTAL",
+          "OTHER"
+        ],
+        "per_class": {
+          "CLAIM": {
+            "annotator_A_count": 2,
+            "annotator_B_count": 4,
+            "agreed_count": 2
+          },
+          "PREMISE": {
+            "annotator_A_count": 4,
+            "annotator_B_count": 1,
+            "agreed_count": 1
+          },
+          "EVIDENCE": {
+            "annotator_A_count": 3,
+            "annotator_B_count": 4,
+            "agreed_count": 3
+          },
+          "COUNTERARGUMENT": {
+            "annotator_A_count": 2,
+            "annotator_B_count": 1,
+            "agreed_count": 1
+          },
+          "REBUTTAL": {
+            "annotator_A_count": 2,
+            "annotator_B_count": 3,
+            "agreed_count": 2
+          },
+          "OTHER": {
+            "annotator_A_count": 9,
+            "annotator_B_count": 9,
+            "agreed_count": 8
+          }
+        },
+        "krippendorffs_alpha": 0.7003,
+        "passes_threshold": true
+      },
+      "relation_agreement": {
+        "status": "COMPLETED",
+        "method": "shared_pairs_only",
+        "scope": "SHARED EXPLICIT POSITIVE PAIRS ONLY",
+        "limitation": "Agreement computed ONLY on relation pairs explicitly annotated by both annotators. Does not measure agreement on negative relations (NO_RELATION), nor whether annotators agree on which pairs to link. Valid without a defined candidate-pair window.",
+        "note": "Agreement computed only on pairs annotated by both annotators. Does not measure agreement on pair selection. Valid without a candidate-pair universe.",
+        "shared_pairs": 11,
+        "only_annotator_A_pairs": 1,
+        "only_annotator_B_pairs": 0,
+        "agreed": 10,
+        "observed_agreement": 0.9091,
+        "expected_agreement": 0.4711,
+        "cohens_kappa": 0.8281,
+        "cohens_kappa_status": "COMPLETED",
+        "matrix": [
+          [
+            7,
+            0,
+            0
+          ],
+          [
+            0,
+            2,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "classes": [
+          "SUPPORTS",
+          "ATTACKS",
+          "RESPONDS_TO"
+        ],
+        "per_class": {
+          "SUPPORTS": {
+            "annotator_A_count": 7,
+            "annotator_B_count": 7,
+            "agreed_count": 7
+          },
+          "ATTACKS": {
+            "annotator_A_count": 3,
+            "annotator_B_count": 2,
+            "agreed_count": 2
+          },
+          "RESPONDS_TO": {
+            "annotator_A_count": 1,
+            "annotator_B_count": 2,
+            "agreed_count": 1
+          }
+        },
+        "disagreements": [
+          {
+            "pair": "u_018->u_012",
+            "annotator_A": "ATTACKS",
+            "annotator_B": "RESPONDS_TO"
+          }
+        ],
+        "passes_threshold": true,
+        "coverage_warning": "Only 2.6% of possible directed pairs are annotated. Without a defined candidate-pair universe (turn distance window k), kappa for relations is computed only on shared annotated pairs and may not be representative."
+      }
+    },
+    "debate_002": {
+      "files": {
+        "annotator_A": "C:\\Users\\hii\\Downloads\\ARGUMAP\\data\\annotations\\pilot\\debate_002_annotator_A.json",
+        "annotator_B": "C:\\Users\\hii\\Downloads\\ARGUMAP\\data\\annotations\\pilot\\debate_002_annotator_B.json"
+      },
+      "file_validation": {
+        "annotator_A": {
+          "valid": true,
+          "errors": [],
+          "warnings": [],
+          "unit_count": 23,
+          "relation_count": 15,
+          "unit_ids": [
+            "u_001",
+            "u_002",
+            "u_003",
+            "u_004",
+            "u_005",
+            "u_006",
+            "u_007",
+            "u_008",
+            "u_009",
+            "u_010",
+            "u_011",
+            "u_012",
+            "u_013",
+            "u_014",
+            "u_015",
+            "u_016",
+            "u_017",
+            "u_018",
+            "u_019",
+            "u_020",
+            "u_021",
+            "u_022",
+            "u_023"
+          ]
+        },
+        "annotator_B": {
+          "valid": true,
+          "errors": [],
+          "warnings": [],
+          "unit_count": 23,
+          "relation_count": 15,
+          "unit_ids": [
+            "u_001",
+            "u_002",
+            "u_003",
+            "u_004",
+            "u_005",
+            "u_006",
+            "u_007",
+            "u_008",
+            "u_009",
+            "u_010",
+            "u_011",
+            "u_012",
+            "u_013",
+            "u_014",
+            "u_015",
+            "u_016",
+            "u_017",
+            "u_018",
+            "u_019",
+            "u_020",
+            "u_021",
+            "u_022",
+            "u_023"
+          ]
+        }
+      },
+      "cross_annotator_alignment": {
+        "debate_id": "debate_002",
+        "shared_unit_ids": 23,
+        "only_annotator_A_units": [],
+        "only_annotator_B_units": [],
+        "annotator_A_relation_count": 15,
+        "annotator_B_relation_count": 15,
+        "shared_relation_pairs": 15,
+        "only_annotator_A_pairs": [],
+        "only_annotator_B_pairs": [],
+        "annotator_A_NO_RELATION_count": 0,
+        "annotator_B_NO_RELATION_count": 0,
+        "possible_directed_pairs_from_shared_units": 506,
+        "annotated_pair_coverage_pct": 2.96
+      },
+      "component_agreement": {
+        "status": "COMPLETED",
+        "total_units": 23,
+        "observed_agreement": 0.8261,
+        "expected_agreement": 0.2004,
+        "cohens_kappa": 0.7825,
+        "matrix": [
+          [
+            3,
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            5,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            4,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            0,
+            0,
+            0,
+            5
+          ]
+        ],
+        "classes": [
+          "CLAIM",
+          "PREMISE",
+          "EVIDENCE",
+          "COUNTERARGUMENT",
+          "REBUTTAL",
+          "OTHER"
+        ],
+        "per_class": {
+          "CLAIM": {
+            "annotator_A_count": 4,
+            "annotator_B_count": 4,
+            "agreed_count": 3
+          },
+          "PREMISE": {
+            "annotator_A_count": 5,
+            "annotator_B_count": 8,
+            "agreed_count": 5
+          },
+          "EVIDENCE": {
+            "annotator_A_count": 4,
+            "annotator_B_count": 4,
+            "agreed_count": 4
+          },
+          "COUNTERARGUMENT": {
+            "annotator_A_count": 2,
+            "annotator_B_count": 1,
+            "agreed_count": 1
+          },
+          "REBUTTAL": {
+            "annotator_A_count": 2,
+            "annotator_B_count": 1,
+            "agreed_count": 1
+          },
+          "OTHER": {
+            "annotator_A_count": 6,
+            "annotator_B_count": 5,
+            "agreed_count": 5
+          }
+        },
+        "krippendorffs_alpha": 0.781,
+        "passes_threshold": true
+      },
+      "relation_agreement": {
+        "status": "COMPLETED",
+        "method": "shared_pairs_only",
+        "scope": "SHARED EXPLICIT POSITIVE PAIRS ONLY",
+        "limitation": "Agreement computed ONLY on relation pairs explicitly annotated by both annotators. Does not measure agreement on negative relations (NO_RELATION), nor whether annotators agree on which pairs to link. Valid without a defined candidate-pair window.",
+        "note": "Agreement computed only on pairs annotated by both annotators. Does not measure agreement on pair selection. Valid without a candidate-pair universe.",
+        "shared_pairs": 15,
+        "only_annotator_A_pairs": 0,
+        "only_annotator_B_pairs": 0,
+        "agreed": 14,
+        "observed_agreement": 0.9333,
+        "expected_agreement": 0.6667,
+        "cohens_kappa": 0.8,
+        "cohens_kappa_status": "COMPLETED",
+        "matrix": [
+          [
+            12,
+            0,
+            0
+          ],
+          [
+            0,
+            2,
+            1
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "classes": [
+          "SUPPORTS",
+          "ATTACKS",
+          "RESPONDS_TO"
+        ],
+        "per_class": {
+          "SUPPORTS": {
+            "annotator_A_count": 12,
+            "annotator_B_count": 12,
+            "agreed_count": 12
+          },
+          "ATTACKS": {
+            "annotator_A_count": 3,
+            "annotator_B_count": 2,
+            "agreed_count": 2
+          },
+          "RESPONDS_TO": {
+            "annotator_A_count": 0,
+            "annotator_B_count": 1,
+            "agreed_count": 0
+          }
+        },
+        "disagreements": [
+          {
+            "pair": "u_020->u_016",
+            "annotator_A": "ATTACKS",
+            "annotator_B": "RESPONDS_TO"
+          }
+        ],
+        "passes_threshold": true,
+        "coverage_warning": "Only 3.0% of possible directed pairs are annotated. Without a defined candidate-pair universe (turn distance window k), kappa for relations is computed only on shared annotated pairs and may not be representative."
+      }
+    },
+    "debate_003": {
+      "files": {
+        "annotator_A": "C:\\Users\\hii\\Downloads\\ARGUMAP\\data\\annotations\\pilot\\debate_003_annotator_A.json",
+        "annotator_B": "C:\\Users\\hii\\Downloads\\ARGUMAP\\data\\annotations\\pilot\\debate_003_annotator_B.json"
+      },
+      "file_validation": {
+        "annotator_A": {
+          "valid": true,
+          "errors": [],
+          "warnings": [],
+          "unit_count": 18,
+          "relation_count": 7,
+          "unit_ids": [
+            "u_001",
+            "u_002",
+            "u_003",
+            "u_004",
+            "u_005",
+            "u_006",
+            "u_007",
+            "u_008",
+            "u_009",
+            "u_010",
+            "u_011",
+            "u_012",
+            "u_013",
+            "u_014",
+            "u_015",
+            "u_016",
+            "u_017",
+            "u_018"
+          ]
+        },
+        "annotator_B": {
+          "valid": true,
+          "errors": [],
+          "warnings": [],
+          "unit_count": 18,
+          "relation_count": 7,
+          "unit_ids": [
+            "u_001",
+            "u_002",
+            "u_003",
+            "u_004",
+            "u_005",
+            "u_006",
+            "u_007",
+            "u_008",
+            "u_009",
+            "u_010",
+            "u_011",
+            "u_012",
+            "u_013",
+            "u_014",
+            "u_015",
+            "u_016",
+            "u_017",
+            "u_018"
+          ]
+        }
+      },
+      "cross_annotator_alignment": {
+        "debate_id": "debate_003",
+        "shared_unit_ids": 18,
+        "only_annotator_A_units": [],
+        "only_annotator_B_units": [],
+        "annotator_A_relation_count": 7,
+        "annotator_B_relation_count": 7,
+        "shared_relation_pairs": 7,
+        "only_annotator_A_pairs": [],
+        "only_annotator_B_pairs": [],
+        "annotator_A_NO_RELATION_count": 0,
+        "annotator_B_NO_RELATION_count": 0,
+        "possible_directed_pairs_from_shared_units": 306,
+        "annotated_pair_coverage_pct": 2.29
+      },
+      "component_agreement": {
+        "status": "COMPLETED",
+        "total_units": 18,
+        "observed_agreement": 0.7778,
+        "expected_agreement": 0.2593,
+        "cohens_kappa": 0.7,
+        "matrix": [
+          [
+            3,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            4,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            0,
+            0,
+            0,
+            6
+          ]
+        ],
+        "classes": [
+          "CLAIM",
+          "PREMISE",
+          "EVIDENCE",
+          "COUNTERARGUMENT",
+          "REBUTTAL",
+          "OTHER"
+        ],
+        "per_class": {
+          "CLAIM": {
+            "annotator_A_count": 3,
+            "annotator_B_count": 5,
+            "agreed_count": 3
+          },
+          "PREMISE": {
+            "annotator_A_count": 0,
+            "annotator_B_count": 2,
+            "agreed_count": 0
+          },
+          "EVIDENCE": {
+            "annotator_A_count": 5,
+            "annotator_B_count": 4,
+            "agreed_count": 4
+          },
+          "COUNTERARGUMENT": {
+            "annotator_A_count": 1,
+            "annotator_B_count": 1,
+            "agreed_count": 1
+          },
+          "REBUTTAL": {
+            "annotator_A_count": 1,
+            "annotator_B_count": 0,
+            "agreed_count": 0
+          },
+          "OTHER": {
+            "annotator_A_count": 8,
+            "annotator_B_count": 6,
+            "agreed_count": 6
+          }
+        },
+        "krippendorffs_alpha": 0.6956,
+        "passes_threshold": true
+      },
+      "relation_agreement": {
+        "status": "COMPLETED",
+        "method": "shared_pairs_only",
+        "scope": "SHARED EXPLICIT POSITIVE PAIRS ONLY",
+        "limitation": "Agreement computed ONLY on relation pairs explicitly annotated by both annotators. Does not measure agreement on negative relations (NO_RELATION), nor whether annotators agree on which pairs to link. Valid without a defined candidate-pair window.",
+        "note": "Agreement computed only on pairs annotated by both annotators. Does not measure agreement on pair selection. Valid without a candidate-pair universe.",
+        "shared_pairs": 7,
+        "only_annotator_A_pairs": 0,
+        "only_annotator_B_pairs": 0,
+        "agreed": 6,
+        "observed_agreement": 0.8571,
+        "expected_agreement": 0.551,
+        "cohens_kappa": 0.6818,
+        "cohens_kappa_status": "COMPLETED",
+        "matrix": [
+          [
+            5,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ]
+        ],
+        "classes": [
+          "SUPPORTS",
+          "ATTACKS",
+          "RESPONDS_TO"
+        ],
+        "per_class": {
+          "SUPPORTS": {
+            "annotator_A_count": 5,
+            "annotator_B_count": 5,
+            "agreed_count": 5
+          },
+          "ATTACKS": {
+            "annotator_A_count": 1,
+            "annotator_B_count": 2,
+            "agreed_count": 1
+          },
+          "RESPONDS_TO": {
+            "annotator_A_count": 1,
+            "annotator_B_count": 0,
+            "agreed_count": 0
+          }
+        },
+        "disagreements": [
+          {
+            "pair": "u_018->u_011",
+            "annotator_A": "RESPONDS_TO",
+            "annotator_B": "ATTACKS"
+          }
+        ],
+        "passes_threshold": true,
+        "coverage_warning": "Only 2.3% of possible directed pairs are annotated. Without a defined candidate-pair universe (turn distance window k), kappa for relations is computed only on shared annotated pairs and may not be representative."
+      }
+    }
+  },
+  "overall_status": "BLOCKED",
+  "blockers": [
+    "Candidate-pair universe (turn distance window k) is undefined. Relation agreement cannot be fully validated until k is determined during the pilot calibration (ANNOTATION_WORKFLOW.md section 4.3)."
+  ]
+}

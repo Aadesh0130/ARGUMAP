@@ -1,0 +1,98 @@
+{
+  "status": "COMPLETED",
+  "total_units": 22,
+  "observed_agreement": 0.7727,
+  "expected_agreement": 0.2335,
+  "cohens_kappa": 0.7035,
+  "matrix": [
+    [
+      2,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      1,
+      1,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      3,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      1,
+      0,
+      1
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      2,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      0,
+      0,
+      8
+    ]
+  ],
+  "classes": [
+    "CLAIM",
+    "PREMISE",
+    "EVIDENCE",
+    "COUNTERARGUMENT",
+    "REBUTTAL",
+    "OTHER"
+  ],
+  "per_class": {
+    "CLAIM": {
+      "annotator_A_count": 2,
+      "annotator_B_count": 4,
+      "agreed_count": 2
+    },
+    "PREMISE": {
+      "annotator_A_count": 4,
+      "annotator_B_count": 1,
+      "agreed_count": 1
+    },
+    "EVIDENCE": {
+      "annotator_A_count": 3,
+      "annotator_B_count": 4,
+      "agreed_count": 3
+    },
+    "COUNTERARGUMENT": {
+      "annotator_A_count": 2,
+      "annotator_B_count": 1,
+      "agreed_count": 1
+    },
+    "REBUTTAL": {
+      "annotator_A_count": 2,
+      "annotator_B_count": 3,
+      "agreed_count": 2
+    },
+    "OTHER": {
+      "annotator_A_count": 9,
+      "annotator_B_count": 9,
+      "agreed_count": 8
+    }
+  },
+  "krippendorffs_alpha": 0.7003
+}

@@ -1,0 +1,440 @@
+{
+  "schema_version": "1.0.0",
+  "last_updated": "2026-11-04T04:18:26.731597+00:00",
+  "guideline_version": "1.1.0",
+  "description": "Log of dialectical ambiguities, annotator disagreements, adjudication decisions, and calibrated tie-breaking rationales from the ARGUMAP annotation pilot.",
+  "cases": [
+    {
+      "case_id": "AMB_001",
+      "debate_id": "debate_001_hansard",
+      "unit_id": "u_007",
+      "ambiguity_type": "CLAIM vs PREMISE",
+      "description": "Utterance expressing negative consequence of failure to regulate ('displaced workers will bear the concentrated cost').",
+      "text": "If we fail to establish enforceable standards today, displaced workers will bear the concentrated cost while corporate platforms privatize the productivity gains.",
+      "annotator_labels": {
+        "annotator_A": "PREMISE",
+        "annotator_B": "CLAIM"
+      },
+      "decision": "PREMISE",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "Functions directly as the causal consequence/justification answering 'Why must the government establish a statutory authority today?'. Intermediate policy consequences in constructive speeches are tagged as PREMISE when subordinate to the main motion.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_002",
+      "debate_id": "debate_001_hansard",
+      "unit_id": "u_011",
+      "ambiguity_type": "COUNTERARGUMENT vs OTHER",
+      "description": "Short conversational intervention challenging opponent ('her central premise is fundamentally flawed').",
+      "text": "her central premise is fundamentally flawed.",
+      "annotator_labels": {
+        "annotator_A": "COUNTERARGUMENT",
+        "annotator_B": "OTHER"
+      },
+      "decision": "COUNTERARGUMENT",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "Even though phrased as conversational dialogue, it constitutes an explicit negative evaluation attacking the validity of the affirmative premise. Tagged as COUNTERARGUMENT.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_003",
+      "debate_id": "debate_001_hansard",
+      "unit_id": "u_012",
+      "ambiguity_type": "PREMISE vs EVIDENCE",
+      "description": "Broad historical generalization ('every major wave of technological innovation... has created substantially more employment').",
+      "text": "History demonstrates that every major wave of technological innovation, from steam power to computerized banking, has created substantially more employment opportunities than it rendered obsolete.",
+      "annotator_labels": {
+        "annotator_A": "PREMISE",
+        "annotator_B": "EVIDENCE"
+      },
+      "decision": "PREMISE",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "Calibrated rule: Historical generalizations without specific quantitative metrics, named institutional studies, or discrete historical dates are deductive/inductive PREMISES, not empirical EVIDENCE.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_004",
+      "debate_id": "debate_001_hansard",
+      "unit_id": "u_016",
+      "ambiguity_type": "PREMISE vs REBUTTAL",
+      "description": "Technical distinction proposition embedded in a rebuttal turn ('generative algorithms directly substitute for cognitive analysis').",
+      "text": "Unlike previous mechanical revolutions that replaced physical labor while creating cognitive clerical roles, generative algorithms directly substitute for cognitive analysis and administrative tasks simultaneously.",
+      "annotator_labels": {
+        "annotator_A": "PREMISE",
+        "annotator_B": "REBUTTAL"
+      },
+      "decision": "PREMISE",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "While occurring inside an overarching rebuttal speech, the unit itself explains the causal mechanism of cognitive substitution. The refutation assertion is u_015, supported by u_016 (PREMISE) and u_017 (EVIDENCE).",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_005",
+      "debate_id": "debate_002_us2016",
+      "unit_id": "u_010",
+      "ambiguity_type": "CLAIM vs PREMISE",
+      "description": "Secondary policy proposal in an opening statement ('guarantee paid family leave').",
+      "text": "We must also guarantee paid family leave so working parents do not face financial ruin simply for caring for a newborn child or an ailing parent.",
+      "annotator_labels": {
+        "annotator_A": "CLAIM",
+        "annotator_B": "PREMISE"
+      },
+      "decision": "CLAIM",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "Represents an autonomous normative policy contention ('We must guarantee...'), not a subordinate justification of minimum wage or clean energy.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_006",
+      "debate_id": "debate_002_us2016",
+      "unit_id": "u_013",
+      "ambiguity_type": "COUNTERARGUMENT vs PREMISE",
+      "description": "Historical criticism of trade deals ('agreements like NAFTA have drained American industrial capability').",
+      "text": "For twenty years, agreements like NAFTA have drained American industrial capability, sending thousands of manufacturing facilities to Mexico and allowing China to devalue its currency without repercussion.",
+      "annotator_labels": {
+        "annotator_A": "COUNTERARGUMENT",
+        "annotator_B": "PREMISE"
+      },
+      "decision": "PREMISE",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "Acts as the causal premise substantiating the speaker's main claim (u_011: 'Our jobs are fleeing our country') and justifying the policy proposal (u_016: tax cuts).",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_007",
+      "debate_id": "debate_002_us2016",
+      "unit_id": "u_020",
+      "ambiguity_type": "REBUTTAL vs CLAIM",
+      "description": "Normative counter-vision offered in response to opponent's tax proposal ('investment from the middle out').",
+      "text": "What we need is investment from the middle out and the ground up, not another failed round of unpaid tax breaks for the wealthy.",
+      "annotator_labels": {
+        "annotator_A": "REBUTTAL",
+        "annotator_B": "CLAIM"
+      },
+      "decision": "REBUTTAL",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "Directly counters opponent's corporate tax cuts (u_016) by framing an alternative economic philosophy in defense of the affirmative plan.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_008",
+      "debate_id": "debate_003_kennedy_nixon",
+      "unit_id": "u_006",
+      "ambiguity_type": "OTHER vs PREMISE",
+      "description": "Historical quotation framing the debate ('In the election of 1860, Abraham Lincoln asked...').",
+      "text": "In the election of 1860, Abraham Lincoln asked whether this nation could exist half slave and half free.",
+      "annotator_labels": {
+        "annotator_A": "OTHER",
+        "annotator_B": "PREMISE"
+      },
+      "decision": "OTHER",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "Oratorical hook/rhetorical parallelism. Does not assert an argument for current national growth policies.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_009",
+      "debate_id": "debate_003_kennedy_nixon",
+      "unit_id": "u_010",
+      "ambiguity_type": "EVIDENCE vs PREMISE",
+      "description": "Assertion combining descriptive condition with causal charge ('federal government has abdicated its fundamental responsibility').",
+      "text": "thousands of public classrooms remain dangerously overcrowded because the federal government has abdicated its fundamental responsibility to invest in national strength.",
+      "annotator_labels": {
+        "annotator_A": "EVIDENCE",
+        "annotator_B": "PREMISE"
+      },
+      "decision": "PREMISE",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "While describing classroom conditions, it embeds a normative causal explanation ('because the federal government has abdicated...') without verifiable statistical citation.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_010",
+      "debate_id": "debate_001_hansard",
+      "unit_id": "u_018->u_012",
+      "ambiguity_type": "ATTACKS vs RESPONDS_TO",
+      "description": "Relation between Wollaston refutation of 19th-century optimism and Clark's historical innovation analogy.",
+      "text": "u_018 ('We cannot rely on nineteenth-century economic optimism...') -> u_012 ('History demonstrates that every major wave of technological innovation...')",
+      "annotator_labels": {
+        "annotator_A": "ATTACKS",
+        "annotator_B": "RESPONDS_TO"
+      },
+      "decision": "ATTACKS",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "u_018 explicitly attempts to invalidate and reject u_012's historical analogy, fulfilling the criteria for an ATTACKS link rather than mere engagement.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_011",
+      "debate_id": "debate_002_us2016",
+      "unit_id": "u_020->u_016",
+      "ambiguity_type": "ATTACKS vs RESPONDS_TO",
+      "description": "Relation between Clinton middle-out counter-proposal and Trump corporate tax cut proposal.",
+      "text": "u_020 ('What we need is investment from the middle out...') -> u_016 ('cutting our corporate tax rate to fifteen percent')",
+      "annotator_labels": {
+        "annotator_A": "ATTACKS",
+        "annotator_B": "RESPONDS_TO"
+      },
+      "decision": "RESPONDS_TO",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "u_020 presents an alternative vision in the dialectic; the direct attack on tax arithmetic is handled in u_017 and u_018. Labeled as RESPONDS_TO.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_012",
+      "debate_id": "debate_001_hansard",
+      "unit_id": "u_019",
+      "ambiguity_type": "OTHER vs CLAIM",
+      "description": "Consensual opening remark by the minister ('workforce safety is paramount').",
+      "text": "The government agrees that workforce safety is paramount in this transition.",
+      "annotator_labels": {
+        "annotator_A": "OTHER",
+        "annotator_B": "CLAIM"
+      },
+      "decision": "OTHER",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "Diplomatic consensus framing before presenting the executive counter-stance. Does not state the motion or substantive claim.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_013",
+      "debate_id": "debate_001_hansard",
+      "unit_id": "u_011->u_005",
+      "ambiguity_type": "ATTACKS vs NO_RELATION",
+      "description": "Refutation opener ('central premise is fundamentally flawed') targeting main motion proposal u_005.",
+      "text": "u_011 ('her central premise is fundamentally flawed') -> u_005 ('establish a statutory AI Employment Protection Authority')",
+      "annotator_labels": {
+        "annotator_A": "ATTACKS",
+        "annotator_B": "NO_RELATION"
+      },
+      "decision": "ATTACKS",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "Directly evaluates and attacks the validity of the overarching motion u_005 across turns. Labeled as ATTACKS.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_014",
+      "debate_id": "debate_002_us2016",
+      "unit_id": "u_014",
+      "ambiguity_type": "OTHER vs PREMISE",
+      "description": "Illustrative rhetorical premise pointing to hollowed-out towns ('Look at states like Ohio, Michigan...').",
+      "text": "Look at states like Ohio, Michigan, Pennsylvania, where hollowed-out towns tell the entire story of bad trade agreements.",
+      "annotator_labels": {
+        "annotator_A": "OTHER",
+        "annotator_B": "PREMISE"
+      },
+      "decision": "PREMISE",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "Functions as an inductive descriptive premise substantiating the economic damage claimed in u_011 and u_013.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_015",
+      "debate_id": "debate_003_kennedy_nixon",
+      "unit_id": "u_013",
+      "ambiguity_type": "OTHER vs CLAIM",
+      "description": "Concession of common national goals ('goals that all Americans can share').",
+      "text": "The goals that Senator Kennedy has stated for America are goals that all Americans can share.",
+      "annotator_labels": {
+        "annotator_A": "OTHER",
+        "annotator_B": "CLAIM"
+      },
+      "decision": "OTHER",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "Oratorical concession / common-ground establishment, not a distinct substantive claim advanced in contestation.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_016",
+      "debate_id": "debate_003_kennedy_nixon",
+      "unit_id": "u_018",
+      "ambiguity_type": "REBUTTAL vs CLAIM",
+      "description": "Counter-thesis countering federal government primacy ('not to maximize the power of federal government...').",
+      "text": "The way to national strength is not to maximize the power of federal government, but to unleash the productive capacity of individual enterprise.",
+      "annotator_labels": {
+        "annotator_A": "REBUTTAL",
+        "annotator_B": "CLAIM"
+      },
+      "decision": "REBUTTAL",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "Serves as an adversarial rebuttal directly contesting the affirmative philosophy of federal intervention.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_017",
+      "debate_id": "debate_003_kennedy_nixon",
+      "unit_id": "u_018->u_011",
+      "ambiguity_type": "RESPONDS_TO vs ATTACKS",
+      "description": "Relation between Nixon rebuttal of federal dominance and Kennedy premise on national leadership decline.",
+      "text": "u_018 ('The way to national strength is not to maximize power of federal government...') -> u_011 ('If we fail to meet these challenges...')",
+      "annotator_labels": {
+        "annotator_A": "RESPONDS_TO",
+        "annotator_B": "ATTACKS"
+      },
+      "decision": "ATTACKS",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "u_018 explicitly disputes the mechanism proposed by Kennedy, challenging the premise that federal intervention is required for national strength. Labeled as ATTACKS.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_018",
+      "debate_id": "uk_hansard_lords_2023",
+      "unit_id": "u_0010",
+      "ambiguity_type": "OTHER vs CLAIM",
+      "description": "Enumerative signpost introducing the subsequent timing contention ('Secondly, there is the matter of timing.').",
+      "text": "Secondly, there is the matter of timing.",
+      "annotator_labels": {
+        "annotator_A": "OTHER",
+        "annotator_B": "CLAIM"
+      },
+      "annotator_confidence": {
+        "annotator_A": 1.0,
+        "annotator_B": 1.0
+      },
+      "decision": "OTHER",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "The unit is an enumerative signpost and rhetorical transition functioning purely as a structural discourse marker to introduce the subsequent argument on timing. Under Guideline §2.6 and §5.4 (Rule 4), discourse management markers, procedural transitions, and oratorical signposts are classified as OTHER.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_019",
+      "debate_id": "uk_hansard_lords_2023",
+      "unit_id": "u_0011",
+      "ambiguity_type": "EVIDENCE vs PREMISE",
+      "description": "Descriptive assessment of government White Paper status with embedded evaluative commentary ('in some respects, this has been overtaken by events...').",
+      "text": "The Government released their White Paper earlier this year but, in some respects, this has been overtaken by events and the Government appear to be rethinking aspects of their strategy.",
+      "annotator_labels": {
+        "annotator_A": "EVIDENCE",
+        "annotator_B": "PREMISE"
+      },
+      "annotator_confidence": {
+        "annotator_A": 1.0,
+        "annotator_B": 1.0
+      },
+      "decision": "PREMISE",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "Although the clause mentions the release of the Government White Paper, the core communicative assertion is an evaluative judgment ('in some respects, this has been overtaken by events and the Government appear to be rethinking aspects of their strategy'). Under Guideline §2.2 and §5.2 (Rule 2), descriptive conditions with embedded evaluative commentary that justify a subsequent claim (u_0012) are classified as PREMISE, not EVIDENCE.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_020",
+      "debate_id": "uk_hansard_lords_2023",
+      "unit_id": "u_0013",
+      "ambiguity_type": "PREMISE vs OTHER",
+      "description": "Autobiographical ethos-establishing introductory statement of professional experience ('In my work as an engineering consultant...').",
+      "text": "In my work as an engineering consultant, I have worked on and seen the continued advancement of these technologies over the years.",
+      "annotator_labels": {
+        "annotator_A": "PREMISE",
+        "annotator_B": "OTHER"
+      },
+      "annotator_confidence": {
+        "annotator_A": 1.0,
+        "annotator_B": 0.65
+      },
+      "decision": "OTHER",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "The unit is an autobiographical ethos-establishing narrative introductory hook. It contains no propositional justification or causal explanation for the debate motion. Under Guideline §2.6 and §5.4 (Rule 4), oratorical narrative framing and introductory personal background statements that do not advance an argumentative premise or claim are classified as OTHER.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_021",
+      "debate_id": "uk_hansard_lords_2023",
+      "unit_id": "u_0017",
+      "ambiguity_type": "OTHER vs PREMISE",
+      "description": "Explanatory statement of software robot operational mechanism replacing human workers in nuclear design data transfer.",
+      "text": "It was effectively a software robot to undertake this work and replace human workers.",
+      "annotator_labels": {
+        "annotator_A": "OTHER",
+        "annotator_B": "PREMISE"
+      },
+      "annotator_confidence": {
+        "annotator_A": 1.0,
+        "annotator_B": 0.8
+      },
+      "decision": "PREMISE",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "The unit articulates the functional mechanism of the automation algorithm ('effectively a software robot to undertake this work and replace human workers'), providing the explanatory link for the labor-saving and cost-saving outcomes in u_0018 that substantiate the speaker's claim in u_0020. Per Guideline §2.2 and §2.6, substantive explanations of technological mechanisms in case studies advance the argument and cannot be dismissed as non-argumentative OTHER.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_022",
+      "debate_id": "uk_hansard_lords_2023",
+      "unit_id": "u_0072",
+      "ambiguity_type": "EVIDENCE vs CLAIM",
+      "description": "Declaration of parliamentary inquiry committee core mission and normative goal to demystify AI issues.",
+      "text": "A key part of our work will be to demystify some of the issues and make sure we are not blinded by the rosy outlook that tech firms are proposing or by doom-saying about the imminent collapse of civilisation.",
+      "annotator_labels": {
+        "annotator_A": "EVIDENCE",
+        "annotator_B": "CLAIM"
+      },
+      "annotator_confidence": {
+        "annotator_A": 1.0,
+        "annotator_B": 1.0
+      },
+      "decision": "CLAIM",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "The unit expresses a primary normative commitment and policy objective of the committee inquiry ('to demystify some of the issues and make sure we are not blinded by the rosy outlook... or by doom-saying'). It contains no quantitative data, research citation, or empirical measurement that would qualify under Guideline §2.3 as EVIDENCE. Under Guideline §2.1, major declarations of policy intent and normative objectives are classified as CLAIM.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_023",
+      "debate_id": "uk_hansard_lords_2023",
+      "unit_id": "u_0093",
+      "ambiguity_type": "PREMISE vs CLAIM",
+      "description": "Observation on the structural difficulty of incremental legislation pacing exponential technology leaps.",
+      "text": "Using the incremental process of legislation to govern a technology characterised by chronic exponential technological leaps is not easy.",
+      "annotator_labels": {
+        "annotator_A": "PREMISE",
+        "annotator_B": "CLAIM"
+      },
+      "annotator_confidence": {
+        "annotator_A": 1.0,
+        "annotator_B": 1.0
+      },
+      "decision": "PREMISE",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "The unit articulates the structural challenge of legislative pacing versus technological acceleration ('Using the incremental process of legislation to govern a technology characterised by chronic exponential technological leaps is not easy'). It functions as a foundational explanatory ground justifying why the government must reject false dichotomies (u_0094) and proactively provide regulatory signals (u_0097). Under Guideline §2.2 and §5.1 (Rule 1), foundational structural reasons supporting a speaker's policy recommendations are classified as PREMISE.",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_024",
+      "debate_id": "uk_hansard_lords_2023",
+      "unit_id": "u_0095",
+      "ambiguity_type": "PREMISE vs CLAIM",
+      "description": "Analogical risk characterization comparing AI existential risk and scientific deepening to climate change.",
+      "text": "Like climate change, AI is a potentially existential risk that is chartered by ever deepening scientific understanding, emerging opportunity and emerging demonstrable risks.",
+      "annotator_labels": {
+        "annotator_A": "PREMISE",
+        "annotator_B": "CLAIM"
+      },
+      "annotator_confidence": {
+        "annotator_A": 1.0,
+        "annotator_B": 1.0
+      },
+      "decision": "PREMISE",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "The unit draws an unquantified conceptual analogy between AI and climate change ('Like climate change, AI is a potentially existential risk...'). Guideline §5.2 (Rule 2) explicitly directs that conceptual analogies and qualitative comparisons function as inductive PREMISE units. Furthermore, under §5.1 (Rule 1), it provides the risk rationale that justifies the necessity of government regulatory guidance (u_0096, u_0097).",
+      "guideline_version": "1.1.0"
+    },
+    {
+      "case_id": "AMB_025",
+      "debate_id": "uk_hansard_lords_2023",
+      "unit_id": "u_0096",
+      "ambiguity_type": "PREMISE vs CLAIM",
+      "description": "Economic reasoning regarding market uncertainty under looming regulation countering the deregulation thesis.",
+      "text": "It is not always true that an absence of government means liberation for business or innovation, especially when business and innovation know that more comprehensive regulation is on the horizon.",
+      "annotator_labels": {
+        "annotator_A": "PREMISE",
+        "annotator_B": "CLAIM"
+      },
+      "annotator_confidence": {
+        "annotator_A": 1.0,
+        "annotator_B": 1.0
+      },
+      "decision": "PREMISE",
+      "adjudicator": "lead_computational_linguist",
+      "rationale": "The proposition establishes the economic rationale regarding market uncertainty under looming regulation ('It is not always true that an absence of government means liberation for business...'). Under Guideline §5.1 (Rule 1) and precedent AMB_001, intermediate argumentative rationales and causal explanations that answer why the government's policy approach is necessary are classified as PREMISE, whereas autonomous policy proposals are reserved for CLAIM.",
+      "guideline_version": "1.1.0"
+    }
+  ]
+}

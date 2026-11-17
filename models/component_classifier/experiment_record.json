@@ -1,0 +1,27 @@
+{
+  "experiment_id": "transformer_roberta_blocked",
+  "model_name": "roberta-base",
+  "dataset_version": "ARGUMAP_GOLD_UNAVAILABLE",
+  "dataset_split_seed": 42,
+  "hyperparameters": {
+    "model_name": "roberta-base",
+    "max_length": 256,
+    "batch_size": 16,
+    "learning_rate": 2e-05,
+    "epochs": 3,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.1,
+    "random_seed": 42,
+    "output_dir": "models\\component_classifier",
+    "device": "cpu",
+    "use_class_weights": true
+  },
+  "training_date": "2026-09-24T13:23:50.956306+00:00",
+  "device": "cpu",
+  "number_of_train_samples": 0,
+  "number_of_validation_samples": 0,
+  "number_of_test_samples": 0,
+  "metrics": {},
+  "status": "BLOCKED",
+  "notes": "Training halted: No production ARGUMAP gold annotations found. Existing files under data/annotations/pilot/ are demonstration artifacts only."
+}

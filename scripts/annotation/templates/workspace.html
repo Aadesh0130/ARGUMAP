@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARGUMAP — Human Annotation Workspace</title>
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --bg-card: #1e293b;
+      --bg-input: #334155;
+      --border: #475569;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --claim: #6366f1;
+      --premise: #10b981;
+      --evidence: #06b6d4;
+      --counter: #f59e0b;
+      --rebuttal: #ec4899;
+      --other: #64748b;
+      --supports: #10b981;
+      --attacks: #ef4444;
+      --responds: #3b82f6;
+      --no-rel: #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    header {
+      background: #111827;
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+    }
+    .badge {
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      font-weight: 600;
+      text-transform: uppercase;
+      background: #0284c7;
+      color: white;
+    }
+    .badge-status {
+      background: #334155;
+    }
+    .progress-bar-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .progress-stat {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .progress-stat strong {
+      color: var(--text);
+    }
+    .progress-track {
+      width: 140px;
+      height: 8px;
+      background: var(--bg-input);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.3s;
+    }
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      cursor: pointer;
+      font-family: inherit;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+    .btn-secondary {
+      background: var(--bg-input);
+      color: var(--text);
+    }
+    .btn-secondary:hover { background: var(--border); }
+    .btn-primary {
+      background: #0284c7;
+      color: white;
+    }
+    .btn-primary:hover { background: #0369a1; }
+    .btn-success {
+      background: #059669;
+      color: white;
+    }
+    .btn-success:hover { background: #047857; }
+
+    /* Main Container */
+    main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    /* Tabs & Content */
+    .tab-nav {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: #182234;
+      padding: 0 24px;
+    }
+    .tab-btn {
+      background: none;
+      border-radius: 0;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      padding: 12px 18px;
+    }
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .workspace-view {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      height: 100%;
+      overflow: hidden;
+    }
+    .content-area {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    .sidebar {
+      width: 320px;
+      border-right: 1px solid var(--border);
+      background: #151f30;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .filter-select {
+      background: var(--bg-input);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 0.8rem;
+    }
+    .item-list {
+      flex: 1;
+      overflow-y: auto;
+      list-style: none;
+    }
+    .list-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      cursor: pointer;
+      transition: background 0.1s;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .list-item:hover {
+      background: rgba(255,255,255,0.03);
+    }
+    .list-item.active {
+      background: rgba(56, 189, 248, 0.12);
+      border-left: 3px solid var(--accent);
+    }
+    .list-item-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .list-item-title {
+      font-size: 0.85rem;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tag {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    /* Active Detail Panel */
+    .detail-panel {
+      flex: 1;
+      padding: 28px 36px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .card-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .unit-text-box {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      color: #f1f5f9;
+      background: #0f172a;
+      padding: 16px;
+      border-radius: 6px;
+      border-left: 4px solid var(--accent);
+    }
+
+    /* Directional Visualizer for Relations */
+    .relation-visualizer {
+      display: flex;
+      align-items: stretch;
+      gap: 16px;
+      margin: 12px 0;
+    }
+    .rel-node {
+      flex: 1;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .rel-node.source { border-top: 4px solid #38bdf8; }
+    .rel-node.target { border-top: 4px solid #f43f5e; }
+    .rel-node-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .rel-node.source .rel-node-label { color: #38bdf8; }
+    .rel-node.target .rel-node-label { color: #f43f5e; }
+    .rel-arrow-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 140px;
+      flex-shrink: 0;
+      gap: 6px;
+    }
+    .rel-arrow {
+      font-size: 2.2rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .rel-distance-badge {
+      font-size: 0.7rem;
+      background: var(--bg-input);
+      padding: 3px 8px;
+      border-radius: 4px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .rel-override-badge {
+      font-size: 0.65rem;
+      background: #b45309;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    /* Controls Grid */
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .choice-btn {
+      padding: 14px;
+      font-size: 0.95rem;
+      background: var(--bg-input);
+      color: var(--text);
+      border: 2px solid transparent;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .choice-btn:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+    .choice-btn.selected {
+      border-color: white;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+    }
+    .choice-btn small {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    /* Colors */
+    .btn-claim.selected { background: var(--claim); color: white; }
+    .btn-premise.selected { background: var(--premise); color: white; }
+    .btn-evidence.selected { background: var(--evidence); color: white; }
+    .btn-counter.selected { background: var(--counter); color: white; }
+    .btn-rebuttal.selected { background: var(--rebuttal); color: white; }
+    .btn-other.selected { background: var(--other); color: white; }
+    .btn-supports.selected { background: var(--supports); color: white; }
+    .btn-attacks.selected { background: var(--attacks); color: white; }
+    .btn-responds.selected { background: var(--responds); color: white; }
+    .btn-norel.selected { background: var(--no-rel); color: white; }
+
+    /* Metadata Controls */
+    .meta-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .control-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .control-row label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      width: 110px;
+    }
+    input[type="range"] {
+      flex: 1;
+    }
+    .note-input {
+      width: 100%;
+      height: 70px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px;
+      border-radius: 6px;
+      font-family: inherit;
+      resize: vertical;
+    }
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0284c7;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+      display: none;
+      z-index: 1000;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      width: 540px;
+      max-width: 90vw;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1>ARGUMAP</h1>
+    <span class="badge" id="annotator-badge">Loading...</span>
+    <span class="badge badge-status" id="status-badge">...</span>
+  </div>
+  <div class="progress-bar-container">
+    <div class="progress-stat">Units: <strong id="unit-prog">0/36</strong></div>
+    <div class="progress-track"><div class="progress-fill" id="unit-fill"></div></div>
+    <div class="progress-stat">Relations: <strong id="rel-prog">0/1260</strong></div>
+    <div class="progress-track"><div class="progress-fill" id="rel-fill"></div></div>
+    <div class="progress-stat">Total: <strong id="total-pct">0%</strong></div>
+  </div>
+  <div class="header-actions">
+    <button class="btn-secondary" onclick="validateCurrent()">Validate</button>
+    <button class="btn-primary" onclick="saveManual()">Save Draft</button>
+    <button class="btn-success" id="export-btn" onclick="exportPackage()" disabled>Export</button>
+  </div>
+</header>
+
+<div class="tab-nav">
+  <button class="tab-btn active" id="tab-comp-btn" onclick="switchTab('components')">1. Component Units (36)</button>
+  <button class="tab-btn" id="tab-rel-btn" onclick="switchTab('relations')">2. Candidate Relations (1,260)</button>
+</div>
+
+<main>
+  <!-- Components View -->
+  <div class="workspace-view" id="components-view">
+    <div class="content-area">
+      <div class="sidebar">
+        <div class="sidebar-header">
+          <span style="font-size:0.8rem; font-weight:bold; color:var(--text-muted);">UNITS (36)</span>
+          <select class="filter-select" id="unit-filter" onchange="filterUnits()">
+            <option value="all">All Units</option>
+            <option value="unannotated">Unlabeled Only</option>
+            <option value="labeled">Labeled Only</option>
+          </select>
+        </div>
+        <ul class="item-list" id="unit-list"></ul>
+      </div>
+
+      <div class="detail-panel" id="unit-detail-panel">
+        <div class="card">
+          <div class="card-meta">
+            <span id="u-meta-id" style="font-weight:bold; color:var(--accent);">--</span>
+            <span id="u-meta-turn">Turn: --</span>
+            <span id="u-meta-speaker">Speaker: --</span>
+            <span id="u-meta-offsets">Offsets: --</span>
+          </div>
+          <div class="unit-text-box" id="u-text">Select a unit to begin annotating.</div>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size:0.9rem; color:var(--text-muted); margin-bottom:8px;">ASSIGN COMPONENT LABEL (Keys 1-6)</h3>
+          <div class="button-grid">
+            <button class="choice-btn btn-claim" onclick="setComponentLabel('CLAIM')">
+              <strong>CLAIM</strong>
+              <small>Key 1 • Central stance</small>
+            </button>
+            <button class="choice-btn btn-premise" onclick="setComponentLabel('PREMISE')">
+              <strong>PREMISE</strong>
+              <small>Key 2 • Reason / Grounding</small>
+            </button>
+            <button class="choice-btn btn-evidence" onclick="setComponentLabel('EVIDENCE')">
+              <strong>EVIDENCE</strong>
+              <small>Key 3 • Factual data / Quote</small>
+            </button>
+            <button class="choice-btn btn-counter" onclick="setComponentLabel('COUNTERARGUMENT')">
+              <strong>COUNTERARGUMENT</strong>
+              <small>Key 4 • Opposing claim</small>
+            </button>
+            <button class="choice-btn btn-rebuttal" onclick="setComponentLabel('REBUTTAL')">
+              <strong>REBUTTAL</strong>
+              <small>Key 5 • Defense / Answer</small>
+            </button>
+            <button class="choice-btn btn-other" onclick="setComponentLabel('OTHER')">
+              <strong>OTHER</strong>
+              <small>Key 6 • Procedural / Non-arg</small>
+            </button>
+          </div>
+
+          <div class="meta-controls">
+            <div class="control-row">
+              <label>Confidence: <span id="u-conf-val">1.0</span></label>
+              <input type="range" id="u-conf" min="0.0" max="1.0" step="0.05" value="1.0" oninput="updateUnitConf(this.value)">
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <label style="font-size:0.8rem; color:var(--text-muted);">Annotator Ambiguity / Rationale Note:</label>
+                <button style="padding:2px 8px; font-size:0.7rem;" class="btn-secondary" onclick="addAmbiguityPrefix('u-note')">+ [AMBIGUITY]</button>
+              </div>
+              <textarea class="note-input" id="u-note" placeholder="Optional rationale or [AMBIGUITY] note..." onchange="updateUnitNote(this.value)"></textarea>
+            </div>
+          </div>
+
+          <div class="nav-bar">
+            <button class="btn-secondary" onclick="prevUnit()">← Previous Unit</button>
+            <button class="btn-primary" onclick="nextUnit()">Next Unit →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Relations View -->
+  <div class="workspace-view" id="relations-view" style="display:none;">
+    <div class="content-area">
+      <div class="sidebar">
+        <div class="sidebar-header">
+          <span style="font-size:0.8rem; font-weight:bold; color:var(--text-muted);" id="rel-sidebar-count">PAIRS</span>
+          <select class="filter-select" id="rel-filter" onchange="filterRelations()">
+            <option value="all">All (1,260)</option>
+            <option value="unannotated" selected>Unlabeled Only</option>
+            <option value="labeled">Labeled Only</option>
+            <option value="overrides">Overrides Only</option>
+            <option value="cross_turn">Cross-Turn Only</option>
+            <option value="intra_turn">Intra-Turn Only</option>
+          </select>
+        </div>
+        <ul class="item-list" id="rel-list"></ul>
+      </div>
+
+      <div class="detail-panel" id="rel-detail-panel">
+        <div class="relation-visualizer">
+          <div class="rel-node source">
+            <div class="rel-node-label">Source Proposition (Arguer)</div>
+            <div style="font-size:0.75rem; color:var(--text-muted);" id="r-src-meta">--</div>
+            <div style="font-size:0.95rem; line-height:1.5;" id="r-src-text">Select a candidate relation.</div>
+          </div>
+
+          <div class="rel-arrow-container">
+            <div class="rel-override-badge" id="r-override-badge" style="display:none;">OVERRIDE</div>
+            <div class="rel-arrow">➔</div>
+            <div class="rel-distance-badge" id="r-dist-badge">Turn Dist: 0</div>
+          </div>
+
+          <div class="rel-node target">
+            <div class="rel-node-label">Target Proposition (Addressed)</div>
+            <div style="font-size:0.75rem; color:var(--text-muted);" id="r-tgt-meta">--</div>
+            <div style="font-size:0.95rem; line-height:1.5;" id="r-tgt-text">--</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size:0.9rem; color:var(--text-muted); margin-bottom:8px;">ASSIGN RELATION LABEL (Keys 1-4)</h3>
+          <div class="button-grid" style="grid-template-columns: repeat(4, 1fr);">
+            <button class="choice-btn btn-supports" onclick="setRelationLabel('SUPPORTS')">
+              <strong>SUPPORTS</strong>
+              <small>Key 1 • Grounding</small>
+            </button>
+            <button class="choice-btn btn-attacks" onclick="setRelationLabel('ATTACKS')">
+              <strong>ATTACKS</strong>
+              <small>Key 2 • Conflict / Refute</small>
+            </button>
+            <button class="choice-btn btn-responds" onclick="setRelationLabel('RESPONDS_TO')">
+              <strong>RESPONDS_TO</strong>
+              <small>Key 3 • Topical reply</small>
+            </button>
+            <button class="choice-btn btn-norel" onclick="setRelationLabel('NO_RELATION')">
+              <strong>NO_RELATION</strong>
+              <small>Key 4 • Independent</small>
+            </button>
+          </div>
+
+          <div class="meta-controls">
+            <div class="control-row">
+              <label>Confidence: <span id="r-conf-val">1.0</span></label>
+              <input type="range" id="r-conf" min="0.0" max="1.0" step="0.05" value="1.0" oninput="updateRelConf(this.value)">
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <label style="font-size:0.8rem; color:var(--text-muted);" id="r-note-label">Override Justification / Note:</label>
+                <button style="padding:2px 8px; font-size:0.7rem;" class="btn-secondary" onclick="addAmbiguityPrefix('r-note')">+ [AMBIGUITY]</button>
+              </div>
+              <textarea class="note-input" id="r-note" placeholder="Required for out-of-window links, optional for ambiguity notes..." onchange="updateRelNote(this.value)"></textarea>
+            </div>
+          </div>
+
+          <div class="nav-bar">
+            <button class="btn-secondary" onclick="prevRelation()">← Previous Pair</button>
+            <button class="btn-primary" onclick="nextRelation()">Next Pair →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast">Saved.</div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h3 id="modal-title">Validation Report</h3>
+    <div id="modal-body" style="font-size:0.9rem; max-height:300px; overflow-y:auto; line-height:1.5;"></div>
+    <div style="display:flex; justify-content:flex-end;">
+      <button class="btn-secondary" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let session = null;
+  let units = [];
+  let currentUnitIdx = 0;
+  let relations = [];
+  let currentRelIdx = 0;
+  let currentTab = 'components';
+
+  async function init() {
+    await fetchSession();
+    await fetchUnits();
+    await fetchRelations();
+    renderUnitList();
+    renderCurrentUnit();
+    setupKeyboardShortcuts();
+  }
+
+  async function fetchSession() {
+    const res = await fetch('/api/session');
+    session = await res.json();
+    document.getElementById('annotator-badge').innerText = session.annotator_id;
+    document.getElementById('status-badge').innerText = session.status;
+    document.getElementById('unit-prog').innerText = `${session.labeled_units}/${session.total_units}`;
+    document.getElementById('rel-prog').innerText = `${session.labeled_relations}/${session.total_relations}`;
+    document.getElementById('total-pct').innerText = `${session.total_progress_pct}%`;
+    document.getElementById('unit-fill').style.width = `${session.unit_progress_pct}%`;
+    document.getElementById('rel-fill').style.width = `${session.relation_progress_pct}%`;
+    document.getElementById('export-btn').disabled = !session.is_complete;
+  }
+
+  async function fetchUnits() {
+    const res = await fetch('/api/units');
+    units = await res.json();
+  }
+
+  async function fetchRelations() {
+    const filter = document.getElementById('rel-filter').value;
+    const res = await fetch(`/api/relations?filter_mode=${filter}&limit=1260`);
+    const data = await res.json();
+    relations = data.items;
+    document.getElementById('rel-sidebar-count').innerText = `PAIRS (${data.total})`;
+    renderRelList();
+    if (relations.length > 0) {
+      if (currentRelIdx >= relations.length) currentRelIdx = 0;
+      renderCurrentRelation();
+    }
+  }
+
+  function switchTab(tab) {
+    currentTab = tab;
+    document.getElementById('tab-comp-btn').classList.toggle('active', tab === 'components');
+    document.getElementById('tab-rel-btn').classList.toggle('active', tab === 'relations');
+    document.getElementById('components-view').style.display = tab === 'components' ? 'flex' : 'none';
+    document.getElementById('relations-view').style.display = tab === 'relations' ? 'flex' : 'none';
+  }
+
+  function renderUnitList() {
+    const list = document.getElementById('unit-list');
+    list.innerHTML = '';
+    const filter = document.getElementById('unit-filter').value;
+
+    units.forEach((u, idx) => {
+      if (filter === 'unannotated' && u.component_label) return;
+      if (filter === 'labeled' && !u.component_label) return;
+
+      const li = document.createElement('li');
+      li.className = `list-item ${idx === currentUnitIdx ? 'active' : ''}`;
+      li.onclick = () => { currentUnitIdx = idx; renderCurrentUnit(); renderUnitList(); };
+
+      const tagColor = u.component_label ? 'background:#059669; color:white;' : 'background:#475569; color:#94a3b8;';
+      li.innerHTML = `
+        <div class="list-item-meta">
+          <span>${u.unit_id} (${u.turn_id})</span>
+          <span class="tag" style="${tagColor}">${u.component_label || 'UNLABELED'}</span>
+        </div>
+        <div class="list-item-title">${u.unit_text}</div>
+      `;
+      list.appendChild(li);
+    });
+  }
+
+  function renderCurrentUnit() {
+    if (!units[currentUnitIdx]) return;
+    const u = units[currentUnitIdx];
+    document.getElementById('u-meta-id').innerText = u.unit_id;
+    document.getElementById('u-meta-turn').innerText = `Turn: ${u.turn_id} (idx: ${u.turn_index})`;
+    document.getElementById('u-meta-speaker').innerText = `Speaker: ${u.speaker_id}`;
+    document.getElementById('u-meta-offsets').innerText = `Offsets: [${u.char_start}:${u.char_end}]`;
+    document.getElementById('u-text').innerText = u.unit_text;
+    document.getElementById('u-conf').value = u.confidence ?? 1.0;
+    document.getElementById('u-conf-val').innerText = u.confidence ?? 1.0;
+    document.getElementById('u-note').value = u.note ?? '';
+
+    // Button states
+    document.querySelectorAll('.choice-btn').forEach(btn => btn.classList.remove('selected'));
+    if (u.component_label) {
+      const clsMap = {
+        'CLAIM': '.btn-claim', 'PREMISE': '.btn-premise', 'EVIDENCE': '.btn-evidence',
+        'COUNTERARGUMENT': '.btn-counter', 'REBUTTAL': '.btn-rebuttal', 'OTHER': '.btn-other'
+      };
+      const btn = document.querySelector(clsMap[u.component_label]);
+      if (btn) btn.classList.add('selected');
+    }
+  }
+
+  async function setComponentLabel(label) {
+    const u = units[currentUnitIdx];
+    const conf = parseFloat(document.getElementById('u-conf').value);
+    const note = document.getElementById('u-note').value;
+
+    const res = await fetch(`/api/units/${u.unit_id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ label, confidence: conf, note })
+    });
+    if (res.ok) {
+      u.component_label = label;
+      u.confidence = conf;
+      u.note = note;
+      renderCurrentUnit();
+      renderUnitList();
+      fetchSession();
+      showToast(`Saved ${u.unit_id}: ${label}`);
+    }
+  }
+
+  async function updateUnitConf(val) {
+    document.getElementById('u-conf-val').innerText = val;
+    if (units[currentUnitIdx].component_label) {
+      await setComponentLabel(units[currentUnitIdx].component_label);
+    }
+  }
+
+  async function updateUnitNote(val) {
+    if (units[currentUnitIdx].component_label) {
+      await setComponentLabel(units[currentUnitIdx].component_label);
+    }
+  }
+
+  function nextUnit() {
+    if (currentUnitIdx < units.length - 1) {
+      currentUnitIdx++;
+      renderCurrentUnit();
+      renderUnitList();
+    }
+  }
+
+  function prevUnit() {
+    if (currentUnitIdx > 0) {
+      currentUnitIdx--;
+      renderCurrentUnit();
+      renderUnitList();
+    }
+  }
+
+  function renderRelList() {
+    const list = document.getElementById('rel-list');
+    list.innerHTML = '';
+    relations.forEach((r, idx) => {
+      const li = document.createElement('li');
+      li.className = `list-item ${idx === currentRelIdx ? 'active' : ''}`;
+      li.onclick = () => { currentRelIdx = idx; renderCurrentRelation(); renderRelList(); };
+
+      const tagColor = r.relation_label ? 'background:#0284c7; color:white;' : 'background:#475569; color:#94a3b8;';
+      li.innerHTML = `
+        <div class="list-item-meta">
+          <span>${r.source_unit_id} ➔ ${r.target_unit_id}</span>
+          <span class="tag" style="${tagColor}">${r.relation_label || 'UNLABELED'}</span>
+        </div>
+        <div class="list-item-title">${r.source_text || ''}</div>
+      `;
+      list.appendChild(li);
+    });
+  }
+
+  function renderCurrentRelation() {
+    if (!relations[currentRelIdx]) return;
+    const r = relations[currentRelIdx];
+
+    document.getElementById('r-src-meta').innerText = `${r.source_unit_id} (${r.source_speaker}, ${r.source_turn})`;
+    document.getElementById('r-src-text').innerText = r.source_text;
+    document.getElementById('r-tgt-meta').innerText = `${r.target_unit_id} (${r.target_speaker}, ${r.target_turn})`;
+    document.getElementById('r-tgt-text').innerText = r.target_text;
+
+    document.getElementById('r-dist-badge').innerText = r.cross_turn ? `Cross-Turn (k=${r.turn_distance})` : 'Intra-Turn (k=0)';
+    document.getElementById('r-override-badge').style.display = r.is_override ? 'inline-block' : 'none';
+
+    document.getElementById('r-conf').value = r.confidence ?? 1.0;
+    document.getElementById('r-conf-val').innerText = r.confidence ?? 1.0;
+    document.getElementById('r-note').value = r.note ?? '';
+
+    // Note requirement label
+    if (r.turn_distance > 3) {
+      document.getElementById('r-note-label').innerText = 'Override Justification (REQUIRED):';
+      document.getElementById('r-note-label').style.color = '#f59e0b';
+    } else {
+      document.getElementById('r-note-label').innerText = 'Rationale / Ambiguity Note:';
+      document.getElementById('r-note-label').style.color = 'var(--text-muted)';
+    }
+
+    // Button states
+    document.querySelectorAll('#rel-detail-panel .choice-btn').forEach(btn => btn.classList.remove('selected'));
+    if (r.relation_label) {
+      const clsMap = {
+        'SUPPORTS': '.btn-supports', 'ATTACKS': '.btn-attacks',
+        'RESPONDS_TO': '.btn-responds', 'NO_RELATION': '.btn-norel'
+      };
+      const btn = document.querySelector(`#rel-detail-panel ${clsMap[r.relation_label]}`);
+      if (btn) btn.classList.add('selected');
+    }
+  }
+
+  async function setRelationLabel(label) {
+    const r = relations[currentRelIdx];
+    const conf = parseFloat(document.getElementById('r-conf').value);
+    const note = document.getElementById('r-note').value;
+
+    const res = await fetch(`/api/relations/${r.source_unit_id}/${r.target_unit_id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ label, confidence: conf, note })
+    });
+    if (res.ok) {
+      r.relation_label = label;
+      r.confidence = conf;
+      r.note = note;
+      renderCurrentRelation();
+      renderRelList();
+      fetchSession();
+      showToast(`Saved (${r.source_unit_id} ➔ ${r.target_unit_id}): ${label}`);
+    } else {
+      const err = await res.json();
+      alert(`Error: ${err.detail}`);
+    }
+  }
+
+  async function updateRelConf(val) {
+    document.getElementById('r-conf-val').innerText = val;
+    if (relations[currentRelIdx].relation_label) {
+      await setRelationLabel(relations[currentRelIdx].relation_label);
+    }
+  }
+
+  async function updateRelNote(val) {
+    if (relations[currentRelIdx].relation_label) {
+      await setRelationLabel(relations[currentRelIdx].relation_label);
+    }
+  }
+
+  function nextRelation() {
+    if (currentRelIdx < relations.length - 1) {
+      currentRelIdx++;
+      renderCurrentRelation();
+      renderRelList();
+    }
+  }
+
+  function prevRelation() {
+    if (currentRelIdx > 0) {
+      currentRelIdx--;
+      renderCurrentRelation();
+      renderRelList();
+    }
+  }
+
+  function filterUnits() {
+    renderUnitList();
+  }
+
+  function filterRelations() {
+    fetchRelations();
+  }
+
+  function addAmbiguityPrefix(elemId) {
+    const el = document.getElementById(elemId);
+    if (!el.value.startsWith('[AMBIGUITY]')) {
+      el.value = '[AMBIGUITY] ' + el.value;
+      el.dispatchEvent(new Event('change'));
+    }
+  }
+
+  async function saveManual() {
+    const res = await fetch('/api/save', { method: 'POST' });
+    if (res.ok) {
+      showToast('Working draft persisted successfully.');
+      fetchSession();
+    }
+  }
+
+  async function validateCurrent() {
+    const res = await fetch('/api/validate');
+    const val = await res.json();
+    let bodyHtml = `<p><strong>Syntax Valid:</strong> ${val.syntax_valid ? '✅ Yes' : '❌ No'}</p>`;
+    bodyHtml += `<p><strong>Complete:</strong> ${val.is_complete ? '✅ Yes (Ready to Export)' : `⚠️ Incomplete (${val.missing_items.length} unannotated items)`}</p>`;
+    if (val.syntax_errors.length > 0) {
+      bodyHtml += `<div style="color:#ef4444; margin-top:8px;"><strong>Errors:</strong><ul>${val.syntax_errors.map(e => `<li>${e}</li>`).join('')}</ul></div>`;
+    }
+    if (val.warnings.length > 0) {
+      bodyHtml += `<div style="color:#f59e0b; margin-top:8px;"><strong>Warnings:</strong><ul>${val.warnings.map(w => `<li>${w}</li>`).join('')}</ul></div>`;
+    }
+    showModal('Validation Status', bodyHtml);
+  }
+
+  async function exportPackage() {
+    if (!confirm('Are you ready to submit your completed independent annotation package?')) return;
+    const res = await fetch('/api/export', { method: 'POST' });
+    const data = await res.json();
+    if (res.ok) {
+      showModal('Submission Successful', `<p style="color:#10b981;">${data.message}</p><p>Saved to: <code>${data.path}</code></p>`);
+      fetchSession();
+    } else {
+      alert(`Export failed: ${data.detail}`);
+    }
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.innerText = msg;
+    t.style.display = 'block';
+    setTimeout(() => { t.style.display = 'none'; }, 2000);
+  }
+
+  function showModal(title, body) {
+    document.getElementById('modal-title').innerText = title;
+    document.getElementById('modal-body').innerHTML = body;
+    document.getElementById('modal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+  }
+
+  function setupKeyboardShortcuts() {
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+
+      if (currentTab === 'components') {
+        if (e.key === '1') setComponentLabel('CLAIM');
+        else if (e.key === '2') setComponentLabel('PREMISE');
+        else if (e.key === '3') setComponentLabel('EVIDENCE');
+        else if (e.key === '4') setComponentLabel('COUNTERARGUMENT');
+        else if (e.key === '5') setComponentLabel('REBUTTAL');
+        else if (e.key === '6') setComponentLabel('OTHER');
+        else if (e.key === 'ArrowRight' || e.key === 'n') nextUnit();
+        else if (e.key === 'ArrowLeft' || e.key === 'p') prevUnit();
+      } else {
+        if (e.key === '1') setRelationLabel('SUPPORTS');
+        else if (e.key === '2') setRelationLabel('ATTACKS');
+        else if (e.key === '3') setRelationLabel('RESPONDS_TO');
+        else if (e.key === '4') setRelationLabel('NO_RELATION');
+        else if (e.key === 'ArrowRight' || e.key === 'n') nextRelation();
+        else if (e.key === 'ArrowLeft' || e.key === 'p') prevRelation();
+      }
+    });
+  }
+
+  window.onload = init;
+</script>
+
+</body>
+</html>

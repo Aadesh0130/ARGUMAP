@@ -1,0 +1,28 @@
+{
+  "experiment_id": "baseline_tfidf_blocked",
+  "model_name": "TF-IDF + Logistic Regression",
+  "dataset_version": "ARGUMAP_GOLD_UNAVAILABLE",
+  "dataset_split_seed": 42,
+  "hyperparameters": {
+    "ngram_range": [
+      1,
+      2
+    ],
+    "min_df": 2,
+    "max_features": 10000,
+    "sublinear_tf": true,
+    "C": 1.0,
+    "class_weight": "balanced",
+    "max_iter": 1000,
+    "random_state": 42,
+    "solver": "lbfgs"
+  },
+  "training_date": "2026-09-24T13:23:05.451923+00:00",
+  "device": "cpu",
+  "number_of_train_samples": 0,
+  "number_of_validation_samples": 0,
+  "number_of_test_samples": 0,
+  "metrics": {},
+  "status": "BLOCKED",
+  "notes": "Training halted: No production ARGUMAP gold annotations found. Existing files under data/annotations/pilot/ are demonstration artifacts only."
+}

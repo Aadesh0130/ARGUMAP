@@ -1,0 +1,44 @@
+============================================================================
+ARGUMAP — Annotation Quality Audit Report
+Timestamp: 2026-10-22T06:52:09.065431+00:00
+============================================================================
+
+--- debate_001 ---
+  [PASS] annotator_A: 22 units, 12 relations
+  [PASS] annotator_B: 22 units, 11 relations
+  Shared units: 22, Shared relation pairs: 11
+  Component kappa: 0.7035 (PASS)
+  Relation kappa [SHARED EXPLICIT POSITIVE PAIRS ONLY]: 0.8281 (PASS)
+  NOTE: Evaluated 11 shared positive pairs only. Coverage is 2.6% of possible pairs; candidate-pair universe window k is undefined.
+
+--- debate_002 ---
+  [PASS] annotator_A: 23 units, 15 relations
+  [PASS] annotator_B: 23 units, 15 relations
+  Shared units: 23, Shared relation pairs: 15
+  Component kappa: 0.7825 (PASS)
+  Relation kappa [SHARED EXPLICIT POSITIVE PAIRS ONLY]: 0.8000 (PASS)
+  NOTE: Evaluated 15 shared positive pairs only. Coverage is 3.0% of possible pairs; candidate-pair universe window k is undefined.
+
+--- debate_003 ---
+  [PASS] annotator_A: 18 units, 7 relations
+  [PASS] annotator_B: 18 units, 7 relations
+  Shared units: 18, Shared relation pairs: 7
+  Component kappa: 0.7000 (PASS)
+  Relation kappa [SHARED EXPLICIT POSITIVE PAIRS ONLY]: 0.6818 (PASS)
+  NOTE: Evaluated 7 shared positive pairs only. Coverage is 2.3% of possible pairs; candidate-pair universe window k is undefined.
+
+============================================================================
+OVERALL ASSESSMENT
+============================================================================
+[PASS] All component kappas meet threshold (>= 0.7)
+
+RELATION AGREEMENT STATUS [SHARED EXPLICIT POSITIVE PAIRS ONLY]:
+  The annotation schema stores only positive/active relation edges.
+  NO_RELATION is NOT explicitly annotated for any pair.
+  The candidate-pair universe (turn distance window k) has NOT been determined yet (see ANNOTATION_WORKFLOW.md section 4.3).
+  Therefore, treating omitted pairs as NO_RELATION would produce invalid agreement statistics.
+
+  Relation kappa is computed ONLY on pairs annotated by BOTH annotators (shared-pairs-only method).
+  This gives a lower-bound on label agreement for actively linked pairs but does NOT validate whether annotators agree on WHICH pairs should have links.
+
+[BLOCKER] Candidate-pair universe undefined. Full relation IAA cannot be computed.
