@@ -47,11 +47,12 @@ cp .env.example .env
 
 | Variable | Description | Default |
 | :--- | :--- | :--- |
-| `DATABASE_URL` | PostgreSQL connection string (falls back to local SQLite if unset) | `sqlite:///./argumap_dev.db` |
-| `CORS_ORIGINS` | Comma-separated list of allowed frontend origins | `http://localhost:5173,http://localhost:3000` |
+| `DATABASE_URL` | PostgreSQL connection string (falls back to local SQLite in development; mandatory in production) | `sqlite:///./argumap_dev.db` |
+| `CORS_ORIGINS` | Comma-separated list of allowed frontend origins (e.g. `https://argumap.vercel.app,http://localhost:5173`) | `http://localhost:5173,http://localhost:3000` |
+| `CORS_ORIGIN_REGEX` | Optional regex pattern for frontend origins (e.g. `https:\/\/.*\.vercel\.app`) | `None` |
 | `APP_ENV` | Runtime environment (`development`, `staging`, `production`) | `development` |
-| `HOST` | Server host binding | `127.0.0.1` |
-| `PORT` | Server port binding | `8000` |
+| `HOST` | Server host binding (`0.0.0.0` for Docker/Render) | `0.0.0.0` |
+| `PORT` | Server port binding (Render injects `$PORT` automatically) | `8000` |
 | `LOG_LEVEL` | Logging level (`debug`, `info`, `warning`, `error`) | `info` |
 
 > **Security Rule:** Never commit `.env` or hardcode database credentials.
@@ -60,11 +61,18 @@ cp .env.example .env
 
 ## 3. Starting the Backend Server
 
-Start the development server with live reload:
-
+### Local Development
 ```bash
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
+
+### Production Deployment (Render + PostgreSQL)
+See the complete deployment guide in [docs/DEPLOYMENT.md](../docs/DEPLOYMENT.md).
+
+* **Root Directory:** `backend`
+* **Build Command:** `pip install -r requirements.txt`
+* **Start Command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+* **Health Check Path:** `/api/health`
 
 The service will be accessible at:
 * **Root Endpoint:** `http://127.0.0.1:8000/`

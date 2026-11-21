@@ -24,31 +24,74 @@ Base = declarative_base()
 _SQLITE_FALLBACK = "sqlite:///./argumap_dev.db"
 
 
+def _normalize_db_url(url: str) -> str:
+    """Normalize legacy postgres:// scheme to postgresql:// for SQLAlchemy compatibility."""
+    if url and url.startswith("postgres://"):
+        return url.replace("postgres://", "postgresql://", 1)
+    return url
+
+
+def _mask_db_url(url: str) -> str:
+    """Mask credentials in database URL to prevent sensitive leaks in logs and error messages."""
+    if not url:
+        return ""
+    try:
+        from sqlalchemy.engine import make_url
+        return make_url(url).render_as_string(hide_password=True)
+    except Exception:
+        import re
+        return re.sub(r"://([^:]+):([^@]+)@", r"://\1:***@", url)
+
+
 def _make_engine(url: str):
     """Create a SQLAlchemy engine for *url*, returning None on failure."""
-    connect_args = {"check_same_thread": False} if url.startswith("sqlite") else {}
+    is_sqlite = url.startswith("sqlite")
+    connect_args = {"check_same_thread": False} if is_sqlite else {}
+    engine_kwargs = {
+        "connect_args": connect_args,
+        "echo": False,
+        "future": True,
+    }
+    if not is_sqlite:
+        engine_kwargs["pool_pre_ping"] = True
     try:
-        eng = create_engine(url, connect_args=connect_args, echo=False, future=True)
+        eng = create_engine(url, **engine_kwargs)
         # Probe the connection immediately so we know it actually works
         with eng.connect() as conn:
             conn.execute(text("SELECT 1"))
         return eng
     except Exception as exc:
-        logger.warning("Could not connect to '%s': %s", url, exc)
+        logger.warning("Could not connect to '%s': %s", _mask_db_url(url), exc)
         return None
 
 
 # ---------------------------------------------------------------------------
-# Engine initialisation — primary URL then SQLite fallback
+# Engine initialisation — primary URL then guarded SQLite fallback
 # ---------------------------------------------------------------------------
-engine = _make_engine(settings.DATABASE_URL)
+_normalized_url = _normalize_db_url(settings.DATABASE_URL)
+engine = _make_engine(_normalized_url)
 
-if engine is None and not settings.DATABASE_URL.startswith("sqlite"):
-    logger.warning(
-        "Primary DATABASE_URL failed. Falling back to local SQLite: %s",
-        _SQLITE_FALLBACK,
-    )
-    engine = _make_engine(_SQLITE_FALLBACK)
+if engine is None:
+    is_production = settings.is_production
+    is_postgres = _normalized_url.startswith("postgresql")
+
+    # In production, or when explicitly targeting PostgreSQL in production,
+    # NEVER silently fall back to local SQLite! Raise an error so deployment fails visibly.
+    if is_production:
+        safe_url = _mask_db_url(_normalized_url)
+        error_msg = (
+            f"CRITICAL: Failed to connect to production database ({safe_url}). "
+            f"Automatic SQLite fallback is disabled in production (APP_ENV={settings.APP_ENV}). "
+            f"Please verify your DATABASE_URL, PostgreSQL credentials, and database server status."
+        )
+        logger.error(error_msg)
+        raise RuntimeError(error_msg)
+    else:
+        logger.warning(
+            "Primary DATABASE_URL failed in development mode. Falling back to local SQLite: %s",
+            _SQLITE_FALLBACK,
+        )
+        engine = _make_engine(_SQLITE_FALLBACK)
 
 if engine is None:
     logger.error(

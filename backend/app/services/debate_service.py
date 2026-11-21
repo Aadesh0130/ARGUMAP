@@ -311,45 +311,116 @@ class DebateService:
         argument_count: int = 0,
         relation_count: int = 0,
         insights: Optional[List[Dict[str, Any]]] = None,
+        arguments: Optional[List[Dict[str, Any]]] = None,
+        relations: Optional[List[Dict[str, Any]]] = None,
+        summary: Optional[Dict[str, Any]] = None,
+        status: str = "COMPLETED",
+        error_message: Optional[str] = None,
     ) -> AnalysisRun:
-        """Creates a completed analysis run record with real pipeline results."""
+        """Creates an analysis run record populated with real argument units,
+        relations, structural insights, and summary counts.
+        """
         now = datetime.now(timezone.utc)
-        run = AnalysisRun(
-            id=str(uuid.uuid4()),
-            debate_id=debate.id,
-            status="COMPLETED",
-            model_version=model_version,
-            error_message=None,
-            completed_at=now,
-        )
-        # Store a lightweight snapshot so GET /analysis/{id} can serve results
+
+        # Resolve arguments: explicit argument payload or serialized from debate
+        resolved_args: List[Dict[str, Any]] = []
+        if arguments is not None:
+            resolved_args = arguments
+        elif debate and debate.arguments:
+            turn_map = {t.id: t.turn_order for t in (debate.turns or [])}
+            resolved_args = [
+                {
+                    "id": a.id,
+                    "turn_id": a.turn_id,
+                    "speaker_id": a.speaker_id,
+                    "text": a.text,
+                    "component_type": a.component_type,
+                    "confidence": a.confidence,
+                    "turn_order": turn_map.get(a.turn_id, 1),
+                    "start_char": a.start_char,
+                    "end_char": a.end_char,
+                }
+                for a in debate.arguments
+            ]
+
+        # Resolve relations: explicit relation payload or serialized from debate
+        resolved_rels: List[Dict[str, Any]] = []
+        if relations is not None:
+            resolved_rels = relations
+        elif debate and debate.relations:
+            resolved_rels = [
+                {
+                    "id": r.id,
+                    "source_argument_id": r.source_argument_id,
+                    "target_argument_id": r.target_argument_id,
+                    "relation_type": r.relation_type,
+                    "confidence": r.confidence,
+                }
+                for r in debate.relations
+            ]
+
+        resolved_insights = insights if insights is not None else []
+
+        # Resolve summary counts
+        if summary is not None:
+            resolved_summary = summary
+        else:
+            resolved_summary = {
+                "speaker_count": len(debate.speakers) if debate and debate.speakers else 0,
+                "turn_count": len(debate.turns) if debate and debate.turns else 0,
+                "argument_count": len(resolved_args) if resolved_args else argument_count,
+                "relation_count": len(resolved_rels) if resolved_rels else relation_count,
+                "insights_count": len(resolved_insights),
+            }
+
         snapshot = {
-            "arguments": [],   # serialised on the API layer; stub here
-            "relations": [],
+            "arguments": resolved_args,
+            "relations": resolved_rels,
+            "summary": resolved_summary,
         }
-        if hasattr(run, "graph_snapshot"):
-            run.graph_snapshot = snapshot
-        if hasattr(run, "insights_snapshot") and insights:
-            run.insights_snapshot = insights
-        db.add(run)
-        db.commit()
-        db.refresh(run)
-        return run
+
+        try:
+            run = AnalysisRun(
+                id=str(uuid.uuid4()),
+                debate_id=debate.id,
+                status=status,
+                model_version=model_version,
+                graph_snapshot=snapshot,
+                insights_snapshot=resolved_insights,
+                error_message=error_message,
+                created_at=now,
+                completed_at=now if status == "COMPLETED" else None,
+            )
+            db.add(run)
+            db.commit()
+            db.refresh(run)
+            return run
+        except Exception:
+            db.rollback()
+            raise
 
     @staticmethod
     def create_placeholder_analysis_run(db: Session, debate: Debate) -> AnalysisRun:
         """Creates a pending analysis run with placeholder disclaimer (kept for backwards compat)."""
-        run = AnalysisRun(
-            id=str(uuid.uuid4()),
-            debate_id=debate.id,
-            status="PENDING",
-            model_version="v1-foundation (ML uninitialized)",
-            error_message="ML analysis pipeline will be connected in a later phase.",
-        )
-        db.add(run)
-        db.commit()
-        db.refresh(run)
-        return run
+        now = datetime.now(timezone.utc)
+        try:
+            run = AnalysisRun(
+                id=str(uuid.uuid4()),
+                debate_id=debate.id,
+                status="PENDING",
+                model_version="v1-foundation (ML uninitialized)",
+                error_message="ML analysis pipeline will be connected in a later phase.",
+                graph_snapshot={"arguments": [], "relations": [], "summary": {}},
+                insights_snapshot=[],
+                created_at=now,
+            )
+            db.add(run)
+            db.commit()
+            db.refresh(run)
+            return run
+        except Exception:
+            db.rollback()
+            raise
 
     @staticmethod
     def get_analysis_run(db: Session, analysis_id: str) -> Optional[AnalysisRun]:

@@ -165,9 +165,16 @@ def get_analysis(analysis_id: str, db: Session = Depends(get_db)):
         for ins in insights_snapshot
     ]
 
-    # Reconstruct summary
+    # Reconstruct summary: ensure counts accurately reflect reconstructed entities
     if graph_snapshot.get("summary"):
-        summary = AnalysisSummary(**graph_snapshot["summary"])
+        summary_data = dict(graph_snapshot["summary"])
+        summary_data["argument_count"] = len(argument_schemas)
+        summary_data["relation_count"] = len(relation_schemas)
+        summary_data["insights_count"] = len(insight_schemas)
+        summary_data["speaker_count"] = len(speaker_schemas)
+        if debate and debate.turns:
+            summary_data["turn_count"] = len(debate.turns)
+        summary = AnalysisSummary(**summary_data)
     else:
         summary = AnalysisSummary(
             speaker_count=len(speaker_schemas),

@@ -38,10 +38,14 @@ app.add_exception_handler(AppException, app_exception_handler)
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
 
 # CORS Middleware (Configurable via environment variables)
+# Never allow wildcard origins with credentials
+cors_origins = settings.cors_origins_list
+has_wildcard = "*" in cors_origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins_list,
-    allow_credentials=True,
+    allow_origins=cors_origins,
+    allow_origin_regex=settings.CORS_ORIGIN_REGEX,
+    allow_credentials=not has_wildcard,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -73,5 +77,5 @@ if __name__ == "__main__":
         "app.main:app",
         host=settings.HOST,
         port=settings.PORT,
-        reload=settings.DEBUG,
+        reload=settings.DEBUG and not settings.is_production,
     )
