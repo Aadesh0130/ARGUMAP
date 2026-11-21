@@ -15,7 +15,7 @@ import { ProcessingStep, StepStatus } from '../components/ProcessingStep';
 import { analyzeTranscript, ApiError } from '../lib/api';
 import { adaptApiResponse } from '../lib/apiAdapter';
 import { SAMPLE_TRANSCRIPT } from '../lib/mockData';
-import { AnalysisResult } from '../types';
+import { AnalysisResult, RawAnalysisResponse } from '../types';
 
 interface PipelineStepConfig {
   number: number;
@@ -126,7 +126,7 @@ export const ProcessingPage: React.FC = () => {
 
     // Launch actual API request
     analyzeTranscript({ title: effectiveTitle, raw_transcript: effectiveTranscript })
-      .then((rawResponse) => {
+      .then((rawResponse: RawAnalysisResponse) => {
         // Discard if a newer retry has been launched
         if (activeRequestIdRef.current !== currentReqId) return;
 

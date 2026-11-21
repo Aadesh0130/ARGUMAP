@@ -141,3 +141,26 @@ export interface AnalysisResult {
   relations: Relation[];
   insights: StructuralInsight[];
 }
+
+export interface RawAnalysisResponse {
+  analysis_id: string;
+  debate_id: string;
+  status: DebateStatus;
+  message?: string;
+  model_version: string;
+  created_at: string;
+  completed_at?: string;
+  summary: {
+    speaker_count: number;
+    turn_count: number;
+    argument_count: number;
+    relation_count: number;
+    insights_count: number;
+    component_counts?: Record<string, number>;
+  };
+  speakers: Speaker[];
+  arguments: Argument[];
+  relations: Relation[];
+  insights: StructuralInsight[];
+  [key: string]: unknown;
+}
