@@ -144,28 +144,81 @@ def test_cors_wildcard_credentials_safety():
 
 
 def test_frontend_api_url_resolution_logic():
-    """Simulates frontend/src/lib/api.ts resolveApiBaseUrl() to guarantee consistency."""
+    """Simulates frontend/src/lib/api.ts resolveApiBaseUrl() and buildApiUrl() to guarantee consistency."""
+    import re
+
     def resolve_api_base_url(env_url: str | None) -> str:
-        if not env_url or not env_url.strip():
+        if not env_url or not isinstance(env_url, str) or not env_url.strip():
             return "http://localhost:8000/api"
-        trimmed = env_url.strip().rstrip("/")
-        if not trimmed.endswith("/api"):
-            return f"{trimmed}/api"
-        return trimmed
+
+        cleaned = env_url.strip()
+        # 1. Strip query parameters and hash fragments
+        cleaned = cleaned.split("?")[0].split("#")[0].strip()
+        # 2. Strip trailing slashes
+        cleaned = re.sub(r"/+$", "", cleaned)
+
+        if not cleaned:
+            return "http://localhost:8000/api"
+
+        # 3. Prepend protocol if omitted
+        if not (cleaned.startswith("http://") or cleaned.startswith("https://") or cleaned.startswith("/")):
+            if cleaned.startswith("localhost") or cleaned.startswith("127.0.0.1"):
+                cleaned = f"http://{cleaned}"
+            else:
+                cleaned = f"https://{cleaned}"
+
+        # 4. Deduplicate repeated /api
+        while cleaned.endswith("/api/api"):
+            cleaned = cleaned[:-4]
+
+        # 5. Ensure it ends with /api
+        if not cleaned.endswith("/api"):
+            cleaned = f"{cleaned}/api"
+
+        return cleaned
+
+    def build_api_url(endpoint: str, base: str) -> str:
+        normalized = endpoint if endpoint.startswith("/") else f"/{endpoint}"
+        return f"{base}{normalized}"
 
     # 1. Undefined or empty -> local dev fallback
     assert resolve_api_base_url(None) == "http://localhost:8000/api"
     assert resolve_api_base_url("   ") == "http://localhost:8000/api"
 
     # 2. Host with trailing /api
-    assert resolve_api_base_url("https://argumap.onrender.com/api") == "https://argumap.onrender.com/api"
-    assert resolve_api_base_url("https://argumap.onrender.com/api/") == "https://argumap.onrender.com/api"
+    assert resolve_api_base_url("https://argumap-api.onrender.com/api") == "https://argumap-api.onrender.com/api"
+    assert resolve_api_base_url("https://argumap-api.onrender.com/api/") == "https://argumap-api.onrender.com/api"
 
     # 3. Host without /api
-    assert resolve_api_base_url("https://argumap.onrender.com") == "https://argumap.onrender.com/api"
-    assert resolve_api_base_url("https://argumap.onrender.com/") == "https://argumap.onrender.com/api"
+    assert resolve_api_base_url("https://argumap-api.onrender.com") == "https://argumap-api.onrender.com/api"
+    assert resolve_api_base_url("https://argumap-api.onrender.com/") == "https://argumap-api.onrender.com/api"
 
     # 4. Multiple trailing slashes
-    assert resolve_api_base_url("https://argumap.onrender.com///") == "https://argumap.onrender.com/api"
+    assert resolve_api_base_url("https://argumap-api.onrender.com///") == "https://argumap-api.onrender.com/api"
+
+    # 5. Query parameters (e.g. ?utm_source=chatgpt.com) stripped cleanly
+    assert resolve_api_base_url("https://argumap-api.onrender.com/api?utm_source=chatgpt.com") == "https://argumap-api.onrender.com/api"
+    assert resolve_api_base_url("https://argumap-api.onrender.com/api?utm_source=chatgpt.com/api") == "https://argumap-api.onrender.com/api"
+    assert resolve_api_base_url("https://argumap-api.onrender.com?utm_source=chatgpt.com") == "https://argumap-api.onrender.com/api"
+    assert resolve_api_base_url("https://argumap-api.onrender.com/?utm_source=chatgpt.com") == "https://argumap-api.onrender.com/api"
+
+    # 6. Hash fragments stripped cleanly
+    assert resolve_api_base_url("https://argumap-api.onrender.com/api#overview") == "https://argumap-api.onrender.com/api"
+
+    # 7. Deduplicate duplicate /api/api
+    assert resolve_api_base_url("https://argumap-api.onrender.com/api/api") == "https://argumap-api.onrender.com/api"
+    assert resolve_api_base_url("https://argumap-api.onrender.com/api/api/") == "https://argumap-api.onrender.com/api"
+
+    # 8. Domain without scheme
+    assert resolve_api_base_url("argumap-api.onrender.com") == "https://argumap-api.onrender.com/api"
+    assert resolve_api_base_url("localhost:8000") == "http://localhost:8000/api"
+
+    # 9. Verify endpoint construction with build_api_url
+    base = resolve_api_base_url("https://argumap-api.onrender.com/api?utm_source=chatgpt.com/api")
+    assert build_api_url("/analyze", base) == "https://argumap-api.onrender.com/api/analyze"
+    assert build_api_url("analyze", base) == "https://argumap-api.onrender.com/api/analyze"
+    assert build_api_url("/health", base) == "https://argumap-api.onrender.com/api/health"
+    assert build_api_url("/analysis/test-uuid-123", base) == "https://argumap-api.onrender.com/api/analysis/test-uuid-123"
+    assert build_api_url("/speak", base) == "https://argumap-api.onrender.com/api/speak"
 
 

@@ -3,20 +3,60 @@ import { RawAnalysisResponse } from '../types';
 // Centralized API Base URL configuration
 // Configured via VITE_API_URL in production (e.g., on Vercel pointing to Render)
 // Falls back to http://localhost:8000/api for local development.
-function resolveApiBaseUrl(): string {
-  const envUrl = import.meta.env.VITE_API_URL;
-  if (!envUrl || !envUrl.trim()) {
+export function resolveApiBaseUrl(customUrl?: string): string {
+  const envUrl = customUrl !== undefined
+    ? customUrl
+    : (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL);
+
+  if (!envUrl || typeof envUrl !== 'string' || !envUrl.trim()) {
     return 'http://localhost:8000/api';
   }
-  const trimmed = envUrl.trim().replace(/\/+$/, '');
-  // Normalize if user provided host without trailing /api
-  if (!trimmed.endsWith('/api')) {
-    return `${trimmed}/api`;
+
+  let cleaned = envUrl.trim();
+
+  // 1. Strip any query parameters (?...) and hash fragments (#...)
+  // This prevents tracking parameters (e.g. ?utm_source=chatgpt.com) from corrupting the API base URL
+  cleaned = cleaned.split('?')[0].split('#')[0].trim();
+
+  // 2. Strip trailing slashes
+  cleaned = cleaned.replace(/\/+$/, '');
+
+  if (!cleaned) {
+    return 'http://localhost:8000/api';
   }
-  return trimmed;
+
+  // 3. Prepend protocol if omitted (e.g. "argumap-api.onrender.com" -> "https://argumap-api.onrender.com")
+  if (!cleaned.startsWith('http://') && !cleaned.startsWith('https://') && !cleaned.startsWith('/')) {
+    if (cleaned.startsWith('localhost') || cleaned.startsWith('127.0.0.1')) {
+      cleaned = `http://${cleaned}`;
+    } else {
+      cleaned = `https://${cleaned}`;
+    }
+  }
+
+  // 4. Deduplicate any repeated /api segments at the end (e.g. /api/api or /api/api/api)
+  while (cleaned.endsWith('/api/api')) {
+    cleaned = cleaned.slice(0, -4);
+  }
+
+  // 5. Ensure it ends with /api (without duplicate /api)
+  if (!cleaned.endsWith('/api')) {
+    cleaned = `${cleaned}/api`;
+  }
+
+  return cleaned;
 }
 
 export const API_BASE = resolveApiBaseUrl();
+
+/**
+ * Builds a clean, fully-qualified or normalized API endpoint URL.
+ * Ensures consistent leading slash and avoids duplicate /api segments.
+ */
+export function buildApiUrl(endpoint: string, base: string = API_BASE): string {
+  const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  return `${base}${normalizedEndpoint}`;
+}
 
 export interface AnalyzeRequest {
   title: string;
@@ -38,16 +78,17 @@ export class ApiError extends Error {
 }
 
 export async function analyzeTranscript(req: AnalyzeRequest): Promise<RawAnalysisResponse> {
+  const url = buildApiUrl('/analyze');
   let response: Response;
   try {
-    response = await fetch(`${API_BASE}/analyze`, {
+    response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(req),
     });
   } catch (networkErr: any) {
     throw new ApiError(
-      `Unable to connect to the ARGUMAP backend service (${API_BASE}). Please check that the backend server is running and accessible.`,
+      `Unable to connect to the ARGUMAP backend service (${url}). Please check that the backend server is running and accessible.`,
       0,
       'NETWORK_DISCONNECTED'
     );
@@ -73,12 +114,13 @@ export async function analyzeTranscript(req: AnalyzeRequest): Promise<RawAnalysi
 }
 
 export async function getAnalysis(analysisId: string): Promise<RawAnalysisResponse> {
+  const url = buildApiUrl(`/analysis/${analysisId}`);
   let response: Response;
   try {
-    response = await fetch(`${API_BASE}/analysis/${analysisId}`);
+    response = await fetch(url);
   } catch (networkErr: any) {
     throw new ApiError(
-      `Unable to connect to the ARGUMAP backend service (${API_BASE}).`,
+      `Unable to connect to the ARGUMAP backend service (${url}).`,
       0,
       'NETWORK_DISCONNECTED'
     );
@@ -103,7 +145,8 @@ export async function getAnalysis(analysisId: string): Promise<RawAnalysisRespon
  * pointing to the generated MP3, ready for <audio> playback.
  */
 export async function speakText(text: string, lang = 'en'): Promise<string> {
-  const response = await fetch(`${API_BASE}/speak`, {
+  const url = buildApiUrl('/speak');
+  const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text, lang }),
