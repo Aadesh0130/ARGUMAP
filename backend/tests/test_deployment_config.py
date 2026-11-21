@@ -48,18 +48,40 @@ def test_cors_origins_parsing():
 
 
 def test_postgres_url_normalization():
-    """Verify that legacy postgres:// URLs from Render/Heroku are normalized to postgresql://."""
+    """Verify that all PostgreSQL URL formats (postgres://, postgresql://, postgresql+psycopg://)
+    are normalized to postgresql+psycopg2:// for consistent psycopg2-binary compatibility.
+    """
+    from sqlalchemy import create_engine
+
+    # 1. Legacy postgres:// format (common on Render / Heroku)
     legacy_url = "postgres://user:pass@ep-cool-db.render.com/argumap"
-    normalized = _normalize_db_url(legacy_url)
-    assert normalized.startswith("postgresql://")
-    assert normalized == "postgresql://user:pass@ep-cool-db.render.com/argumap"
+    norm_legacy = _normalize_db_url(legacy_url)
+    assert norm_legacy.startswith("postgresql+psycopg2://")
+    assert norm_legacy == "postgresql+psycopg2://user:pass@ep-cool-db.render.com/argumap"
 
-    # Standard URLs should remain unchanged
-    pg_url = "postgresql://user:pass@host/db"
-    assert _normalize_db_url(pg_url) == pg_url
+    # 2. Driver-ambiguous postgresql:// format
+    pg_url = "postgresql://user:pass@ep-cool-db.render.com/argumap"
+    norm_pg = _normalize_db_url(pg_url)
+    assert norm_pg == "postgresql+psycopg2://user:pass@ep-cool-db.render.com/argumap"
 
+    # 3. postgresql+psycopg:// format (which previously caused No module named 'psycopg')
+    psycopg_url = "postgresql+psycopg://user:pass@ep-cool-db.render.com/argumap"
+    norm_psycopg = _normalize_db_url(psycopg_url)
+    assert norm_psycopg == "postgresql+psycopg2://user:pass@ep-cool-db.render.com/argumap"
+
+    # 4. Explicit postgresql+psycopg2:// format preserved
+    psycopg2_url = "postgresql+psycopg2://user:pass@ep-cool-db.render.com/argumap"
+    assert _normalize_db_url(psycopg2_url) == psycopg2_url
+
+    # 5. Non-postgres URLs (e.g. SQLite) remain unchanged
     sqlite_url = "sqlite:///./argumap_dev.db"
     assert _normalize_db_url(sqlite_url) == sqlite_url
+
+    # 6. Verify SQLAlchemy engine creation uses the installed psycopg2 driver without ModuleNotFoundError
+    for test_url in [legacy_url, pg_url, psycopg_url, psycopg2_url]:
+        engine = create_engine(_normalize_db_url(test_url))
+        assert engine.driver == "psycopg2"
+        assert engine.dialect.name == "postgresql"
 
 
 def test_production_database_safety_no_sqlite_fallback(monkeypatch):

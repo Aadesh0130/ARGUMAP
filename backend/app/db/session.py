@@ -25,9 +25,24 @@ _SQLITE_FALLBACK = "sqlite:///./argumap_dev.db"
 
 
 def _normalize_db_url(url: str) -> str:
-    """Normalize legacy postgres:// scheme to postgresql:// for SQLAlchemy compatibility."""
-    if url and url.startswith("postgres://"):
-        return url.replace("postgres://", "postgresql://", 1)
+    """Normalize PostgreSQL database URLs to explicitly use the psycopg2 driver (postgresql+psycopg2://).
+
+    Ensures compatibility between SQLAlchemy 2.0 and the installed psycopg2-binary package.
+    Normalizes legacy and driver-ambiguous URL schemes (e.g., from Render):
+      - postgres://... -> postgresql+psycopg2://...
+      - postgresql+psycopg://... -> postgresql+psycopg2://...
+      - postgresql://... -> postgresql+psycopg2://...
+      - postgresql+psycopg2://... -> preserved as postgresql+psycopg2://...
+    """
+    if not url:
+        return url
+    url = url.strip()
+    if url.startswith("postgres://"):
+        return url.replace("postgres://", "postgresql+psycopg2://", 1)
+    if url.startswith("postgresql+psycopg://"):
+        return url.replace("postgresql+psycopg://", "postgresql+psycopg2://", 1)
+    if url.startswith("postgresql://"):
+        return url.replace("postgresql://", "postgresql+psycopg2://", 1)
     return url
 
 

@@ -49,7 +49,7 @@ Once provisioned, note the connection details from the Render dashboard:
   `postgresql://argumap_user:<PASSWORD>@dpg-xxxx-a.render.com/argumap`
 
 > [!NOTE]
-> Render may provide connection strings with the legacy `postgres://` scheme. The ARGUMAP backend automatically normalizes `postgres://` to `postgresql://` for SQLAlchemy 2 compatibility.
+> Render may provide connection strings with the legacy `postgres://` or `postgresql://` scheme. The ARGUMAP backend automatically normalizes any PostgreSQL scheme (`postgres://`, `postgresql://`, or `postgresql+psycopg://`) to `postgresql+psycopg2://` to ensure seamless compatibility with the installed `psycopg2-binary` driver.
 >
 > In production (`APP_ENV=production`), automatic SQLite fallback is **strictly disabled**. If the database is unreachable, the backend fails visibly and reports unready to avoid silent data loss.
 
